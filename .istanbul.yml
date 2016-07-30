@@ -1,0 +1,22 @@
+verbose: false
+instrumentation:
+    root: .
+    extensions:
+        - .js
+    default-excludes: true
+    excludes: ['**/node_modules/**']
+    compact: false
+reporting:
+    root: ./coverage/tmp
+    print: summary
+    reports:
+        - lcov
+    dir: ./coverage
+    report-config:
+      json:
+        file: coverage.json
+    watermarks:
+        statements: [90, 99]
+        lines: [90, 99]
+        functions: [90, 99]
+        branches: [90, 99]

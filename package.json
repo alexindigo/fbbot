@@ -1,0 +1,51 @@
+{
+  "name": "fbbot",
+  "version": "0.0.0",
+  "description": "Minimal framework/SDK for facebook messenger bots. BYOS (Bring Your Own Server)",
+  "main": "index.js",
+  "scripts": {
+    "debug": "tape test/test-*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexindigo/fbbot.git"
+  },
+  "keywords": [
+    "bot",
+    "facebook",
+    "messenger",
+    "fb",
+    "fbbot",
+    "api",
+    "hook",
+    "webhook",
+    "sdk",
+    "byos"
+  ],
+  "author": "Alex Indigo <iam@alexindigo.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alexindigo/fbbot/issues"
+  },
+  "homepage": "https://github.com/alexindigo/fbbot#readme",
+  "devDependencies": {
+    "coveralls": "^2.11.11",
+    "deeply": "^2.0.1",
+    "eslint": "^3.1.1",
+    "express": "^4.14.0",
+    "glob": "^7.0.5",
+    "hapi": "^13.5.0",
+    "istanbul": "^0.4.4",
+    "pre-commit": "^1.1.3",
+    "restify": "^4.1.1",
+    "stack-trace": "0.0.9",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.6.0"
+  },
+  "dependencies": {
+    "asynckit": "^0.4.0",
+    "hyperquest": "^2.0.0",
+    "raw-body": "^2.1.7",
+    "request": "^2.74.0"
+  }
+}

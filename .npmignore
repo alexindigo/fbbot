@@ -1,0 +1,15 @@
+.DS_Store
+.editorconfig
+.eslintignore
+.eslintrc
+.gitignore
+.istanbul.yml
+.npmignore
+.travis.yml
+appveyor.yml
+
+coverage
+node_modules
+test
+
+*.log

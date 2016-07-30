@@ -1,0 +1,17 @@
+sudo: false
+language: node_js
+node_js:
+  - "0.12"
+  - "iojs"
+  - "4"
+  - "5"
+  - "stable"
+script:
+  - node --version
+  - npm --version
+  # linting
+  - npm run lint
+  # nodejs testing
+  - npm run test
+after_success:
+  - "cat coverage/lcov.info | ./node_modules/.bin/coveralls"
