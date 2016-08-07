@@ -1,7 +1,10 @@
 var util    = require('util')
+  , events  = require('events')
+  
   , merge   = require('deeply')
   , rawBody = require('raw-body')
-  , events  = require('events')
+
+  , adapter = require('./adapters/index.js')
   ;
 
 module.exports = Fbbot;
@@ -41,10 +44,30 @@ function Fbbot(options)
  */
 Fbbot.prototype.middleware = function(request, response, next)
 {
-  console.log('Got here, body:', request.body);
-  response.send('Hello Express!');
+  var aa = adapter(request, response, next);
+
+//console.log('\n\n\n RESPONSE TYPE:', util.inspect(response, true, 0, true), '<< \n\n\n');
+//console.log('\n CLIENT:', request.client, '\nTYPE:', typeof request.client, '\n INSIDE:', util.inspect(request.client, true, 0, true), '!!!\n\n\n');
+
+  this._parseBody(request, function(err)
+  {
+    var responseCode = 202;
+//console.log('Got here, body!!!!:\n\n', request.body, '\n\n====\n\n', request.headers, '\n\n');
+
+    if (typeof response == 'function')
+    {
+      response('').code(responseCode);
+    }
+    else
+    {
+      response.statusCode = responseCode;
+      response.send ? response.send('') : response.end('');
+    }
+
+  });
 
 };
+
 
 /**
  * Parses body of the request into an object
@@ -60,6 +83,13 @@ Fbbot.prototype._parseBody = function(request, callback)
     limit   : this.options.bodyMaxLength,
     encoding: this.options.bodyEncoding
   };
+
+  if (typeof request.body == 'object' || typeof request.payload == 'object')
+  {
+    request.body = request.body || request.payload;
+    callback(null, request.body);
+    return;
+  }
 
   rawBody(request, options, function(error, body)
   {
