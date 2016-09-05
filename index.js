@@ -1,13 +1,16 @@
-var util    = require('util')
-  , events  = require('events')
-  
-  , merge   = require('deeply')
-  , rawBody = require('raw-body')
-
-  , adapter = require('./adapters/index.js')
+var util       = require('util')
+  , events     = require('events')
+  , bole       = require('bole')
+  , merge      = require('deeply')
+  , agnostic   = require('agnostic')
+  , cache      = require('async-cache')
+  , stringify  = require('fast-safe-stringify')
+  , handler    = require('./lib/handler.js')
+  , middleware  = require('./lib/middleware.js')
   ;
 
 module.exports = Fbbot;
+util.inherits(Fbbot, events.EventEmitter);
 
 // defaults
 Fbbot.defaults = {
@@ -15,7 +18,17 @@ Fbbot.defaults = {
   bodyEncoding : 'utf8'
 };
 
-util.inherits(Fbbot, events.EventEmitter);
+// expose logger
+Fbbot.logger = bole;
+
+// add middleware methods
+Fbbot.prototype.use = middleware.use;
+// no need to expose middleware handler as public api
+Fbbot.prototype.run = middleware.run;
+// processing entry point
+Fbbot.prototype.handler = handler;
+
+
 
 /**
  * Fbbot instance constructor
@@ -29,83 +42,74 @@ function Fbbot(options)
 
   this.options = merge(Fbbot.defaults, options || {});
 
+  // creds
+  this.credentials =
+  {
+    // keep simple naming for internal reference
+    token : this.options.pageAccessToken || this.options.token,
+    secret: this.options.verifyToken || this.options.secret
+  };
+
+  if (!this.credentials.token || !this.credentials.secret)
+  {
+    throw new Error('Both `token` (pageAccessToken) and `secret` (verifyToken) are required');
+  }
+
+  // expose logger
+  this.logger = options.logger || bole(options.name || 'fbbot');
+
+  // middleware storage (per event)
+  this.stack = {};
+
   // lock-in public methods
-  // request handler is the same middleware
-  // just more semantic name for some use cases
-  this.requestHandler = this.middleware = this.middleware.bind(this);
+  // wrap `_handler` with agnostic to accommodate different http servers
+  this.requestHandler = agnostic(this._handler.bind(this));
 }
 
 /**
  * HTTP requests handler, could be used as middleware
  *
- * @param {http.IncomingMessage} request - incoming http request object
- * @param {http.ServerResponse} response - outgoing http response object
- * @param {function} next - outgoing http response object
- */
-Fbbot.prototype.middleware = function(request, response, next)
-{
-  var aa = adapter(request, response, next);
-
-//console.log('\n\n\n RESPONSE TYPE:', util.inspect(response, true, 0, true), '<< \n\n\n');
-//console.log('\n CLIENT:', request.client, '\nTYPE:', typeof request.client, '\n INSIDE:', util.inspect(request.client, true, 0, true), '!!!\n\n\n');
-
-  this._parseBody(request, function(err)
-  {
-    var responseCode = 202;
-//console.log('Got here, body!!!!:\n\n', request.body, '\n\n====\n\n', request.headers, '\n\n');
-
-    if (typeof response == 'function')
-    {
-      response('').code(responseCode);
-    }
-    else
-    {
-      response.statusCode = responseCode;
-      response.send ? response.send('') : response.end('');
-    }
-
-  });
-
-};
-
-
-/**
- * Parses body of the request into an object
- *
  * @private
- * @param {http.IncomingMessage} request - request object
- * @param {function} callback - invoked after body parsing is done (either successfully or not)
+ * @param {EventEmitter} request - incoming http request object
+ * @param {function} respond - http response function
  */
-Fbbot.prototype._parseBody = function(request, callback)
+Fbbot.prototype._handler = function(request, respond)
 {
-  var options = {
-    length  : request.headers['content-length'],
-    limit   : this.options.bodyMaxLength,
-    encoding: this.options.bodyEncoding
-  };
-
-  if (typeof request.body == 'object' || typeof request.payload == 'object')
+  // GET request handling
+  if (request.method == 'GET')
   {
-    request.body = request.body || request.payload;
-    callback(null, request.body);
+    this.log.info();
+    this._verifyEndpoint(request, respond);
     return;
   }
 
-  rawBody(request, options, function(error, body)
+  // as per facebook doc – respond as soon as non-humanly possible, always respond with 200 OK
+  // https://developers.facebook.com/docs/messenger-platform/webhook-reference#response
+  respond(200);
+
+console.log('\n\n\n', this.stack, '\n\n\n');
+
+  // kind of, process no-event middleware
+  this.handler(request.body, function(err, payload)
   {
-    if (error) return callback(error);
-
-    try
-    {
-      request.body = JSON.parse(body);
-    }
-    catch (e)
-    {
-      // behave like express/body-parser
-      request.body = {};
-      return callback(e, body);
-    }
-
-    callback(null, request.body);
+console.log('\n\n- PAYLOAD:', err, '<>', JSON.stringify(payload, null, 2), '\n\n');
   });
+};
+
+/**
+ * Verifies endpoint by replying with the provided challenge
+ *
+ * @private
+ * @param {EventEmitter} request - incoming http request object
+ * @param {function} respond - http response function
+ */
+Fbbot.prototype._verifyEndpoint = function(request, respond)
+{
+  if (request.query.hub && request.query.hub.verify_token === this.credentials.secret)
+  {
+    respond(request.query.hub.challenge);
+    return;
+  }
+
+  respond('Error, wrong validation token');
 };

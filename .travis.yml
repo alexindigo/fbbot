@@ -1,17 +1,27 @@
 sudo: false
+
 language: node_js
 node_js:
   - "0.12"
   - "iojs"
   - "4"
   - "5"
-  - "stable"
+  - "6"
+
+os:
+- osx
+- linux
+
+install:
+  - travis_retry npm install
+
 script:
+  - uname -a
   - node --version
   - npm --version
   # linting
-  - npm run lint
-  # nodejs testing
-  - npm run test
+  - npm run ci-lint
+  - npm run ci-test
+
 after_success:
   - "cat coverage/lcov.info | ./node_modules/.bin/coveralls"

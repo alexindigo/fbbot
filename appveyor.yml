@@ -14,8 +14,7 @@ install:
 test_script:
   - node --version
   - npm --version
-  - npm run lint
-  - npm run win-test
+  - npm run test
 build: off
 matrix:
   fast_finish: true
