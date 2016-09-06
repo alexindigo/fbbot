@@ -87,13 +87,15 @@ Fbbot.prototype._handler = function(request, respond)
   // https://developers.facebook.com/docs/messenger-platform/webhook-reference#response
   respond(200);
 
-console.log('\n\n\n', this.stack, '\n\n\n');
-
-  // kind of, process no-event middleware
-  this.handler(request.body, function(err, payload)
+  // let request to finish, then do our thing
+  process.nextTick(function()
   {
-console.log('\n\n- PAYLOAD:', err, '<>', JSON.stringify(payload, null, 2), '\n\n');
-  });
+    // kind of, process no-event middleware
+    this.handler(request.body, function(err, payload)
+    {
+  console.log('\n\n+++ FINISHED PAYLOAD:', err, '<>', JSON.stringify(payload, null, 2), '\n\n');
+    });
+  }.bind(this));
 };
 
 /**

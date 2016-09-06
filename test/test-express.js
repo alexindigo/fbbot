@@ -5,26 +5,79 @@ var express    = require('express')
   , Fbbot      = require('../')
   ;
 
-test.only('express minimal setup, no parser', function(t)
+test('text message with express', function(t)
 {
-  t.plan(1);
+  t.plan(5);
 
   var server
     , app   = express()
     , fbbot = new Fbbot(common.fbbot)
     ;
 
-  // get events
-  fbbot.on('message', function(message)
-  {
-//console.log('\n\n GOT MESSAGE', message, '<<\n\n');
-  });
-
+  // use middleware
   fbbot.use(function(payload, cb)
   {
-//console.log('\n\n\n MIDDLEWARE:', payload, '\n\n\n\n');
+    t.deepEquals(payload, common.requests['text'].body, 'global middleware should receive full payload');
     cb(null, payload);
   });
+
+  // message event
+  fbbot.on('message', function(message)
+  {
+    t.deepEquals(message, common.requests['text'].body.entry[0].messaging[0].message, 'message event should receive only message object');
+  });
+
+  // fbbot.on('message.text', function(message)
+  // {
+  //   t.deepEquals(message, common.requests['text'].body.entry[0].messaging[0], 'message event should receive only message object');
+  // });
+
+  // plug-in fbbot
+  app.use(common.server.endpoint, fbbot.requestHandler);
+
+  // start the server
+  server = app.listen(common.server.port, function()
+  {
+    common.sendRequest('text', function(error, response)
+    {
+      t.error(error, 'should be no error');
+      t.equal(response.statusCode, 200, 'should return code 200');
+
+      server.close(function()
+      {
+        t.ok(true, 'make sure server is closed');
+      });
+    });
+  });
+
+});
+
+test('attachments-image message with express', function(t)
+{
+  t.plan(5);
+
+  var server
+    , app   = express()
+    , fbbot = new Fbbot(common.fbbot)
+    ;
+
+  // use middleware
+  fbbot.use(function(payload, cb)
+  {
+    t.deepEquals(payload, common.requests['attachments-image'].body, 'global middleware should receive full payload');
+    cb(null, payload);
+  });
+
+  // message event
+  fbbot.on('message', function(message)
+  {
+    t.deepEquals(message, common.requests['attachments-image'].body.entry[0].messaging[0].message, 'message event should receive only message object');
+  });
+
+  // fbbot.on('message.text', function(message)
+  // {
+  //   t.deepEquals(message, common.requests['text'].body.entry[0].messaging[0], 'message event should receive only message object');
+  // });
 
   // plug-in fbbot
   app.use(common.server.endpoint, fbbot.requestHandler);
@@ -34,48 +87,12 @@ test.only('express minimal setup, no parser', function(t)
   {
     common.sendRequest('attachments-image', function(error, response)
     {
-//console.log('\n\n ----- REQUEST', error, 'vs', response.statusCode, '--', response.headers);
+      t.error(error, 'should be no error');
+      t.equal(response.statusCode, 200, 'should return code 200');
 
       server.close(function()
       {
-        t.ok(true);
-      });
-    });
-  });
-
-});
-
-
-test('express minimal setup, with bodyParser middleware', function(t)
-{
-  t.plan(1);
-
-  var server
-    , app   = express()
-    , fbbot = new Fbbot(common.fbbot)
-    ;
-
-  // preparations
-  app.use(bodyParser.json({ limit: 1024 * 1000 }));
-
-  // get events
-  fbbot.on('message', function(user, message)
-  {
-
-  });
-
-  // plug-in fbbot
-  app.use(common.server.endpoint, fbbot.middleware);
-  // start the server
-  server = app.listen(common.server.port, function()
-  {
-    common.sendRequest('text', function(error, response)
-    {
-//console.log('\n\n ----- REQUEST', error, 'vs', response.statusCode, '--', response.headers);
-
-      server.close(function()
-      {
-        t.ok(true);
+        t.ok(true, 'make sure server is closed');
       });
     });
   });
