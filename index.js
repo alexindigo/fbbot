@@ -6,7 +6,9 @@ var util       = require('util')
   , cache      = require('async-cache')
   , stringify  = require('fast-safe-stringify')
   , handler    = require('./lib/handler.js')
-  , middleware  = require('./lib/middleware.js')
+  , middleware = require('./lib/middleware.js')
+  , incoming   = require('./incoming/index.js')
+  , outgoing   = require('./outgoing/index.js')
   ;
 
 module.exports = Fbbot;
@@ -64,6 +66,10 @@ function Fbbot(options)
   // lock-in public methods
   // wrap `_handler` with agnostic to accommodate different http servers
   this.requestHandler = agnostic(this._handler.bind(this));
+
+  // attach lyfecycle filters
+  incoming(this);
+  outgoing(this);
 }
 
 /**
