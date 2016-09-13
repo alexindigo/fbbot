@@ -1,0 +1,54 @@
+{
+  "headers": {
+    "host": "localhost",
+    "accept": "*/*",
+    "accept-encoding": "deflate, gzip",
+    "content-type": "application/json"
+  },
+  "body": {
+    "object": "page",
+    "entry": [{
+      "id": "514061682115264",
+      "time": 1469431481130,
+      "messaging": [{
+        "sender": {
+          "id": "10157033896470455"
+        },
+        "recipient": {
+          "id": "514061682115264"
+        },
+        "timestamp": 1469431481085,
+        "message": {
+          "mid": "mid.1469431481004:de5a5b6fcde7c15849",
+          "seq": 2245,
+          "attachments": [{
+            "type": "image",
+            "payload": {
+              "url": "https://scontent.xx.fbcdn.net/v/t35.0-12/13838166_10157298294835455_1784596700_o.jpg?_nc_ad=z-m&oh=2567989401ca8aaaabba2f51b541fbb8&oe=57987057"
+            }
+          }, {
+            "type": "image",
+            "payload": {
+              "url": "https://scontent.xx.fbcdn.net/v/t35.0-12/13833417_10157298294840455_182043233_o.jpg?_nc_ad=z-m&oh=29a86c2372ba651d7a6c4024f8f34887&oe=57986164"
+            }
+          }]
+        }
+      }]
+    }]
+  },
+
+  "+expected":
+  {
+    "plan": 13,
+    "entry": [{
+      "messaging": [{
+        "message": {
+          "type": "attachment",
+          "user": {
+            "id": "10157033896470455"
+          }
+        }
+      }]
+    }]
+  }
+}

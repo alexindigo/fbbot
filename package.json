@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "",
     "lint": "eslint *.js lib/*.js test/*.js",
-    "test": "tape test/test-*.js",
+    "test": "tape test/test-express.js",
     "cover": "",
     "ci-lint": "is-node-modern && npm run lint || is-node-modern",
     "get-version": "node -e \"console.log(require('./package.json').version)\"",
@@ -15,6 +15,9 @@
     "prepublish": "in-publish && npm run update-readme || not-in-publish",
     "postpublish": "npm run restore-readme"
   },
+  "pre-commit": [
+    "test"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/alexindigo/fbbot.git"

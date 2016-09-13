@@ -6,8 +6,13 @@ var filters = {
     require('./user_init.js')
   ],
 
+  'postback': [
+    require('./postback.js')
+  ],
+
   'message': [
-    require('./type_cast.js')
+    require('./type_cast.js'),
+    require('./quick_reply.js')
   ]
 };
 

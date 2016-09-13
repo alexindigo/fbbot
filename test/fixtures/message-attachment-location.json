@@ -1,0 +1,54 @@
+{
+  "headers": {
+    "host": "localhost",
+    "accept": "*/*",
+    "accept-encoding": "deflate, gzip",
+    "content-type": "application/json"
+  },
+  "body": {
+    "object": "page",
+    "entry": [{
+      "id": "514061682115264",
+      "time": 1469431137719,
+      "messaging": [{
+        "sender": {
+          "id": "10157033896470455"
+        },
+        "recipient": {
+          "id": "514061682115264"
+        },
+        "timestamp": 1469431137638,
+        "message": {
+          "mid": "mid.1469431137525:552824a619d22db578",
+          "seq": 2240,
+          "attachments": [{
+            "title": "HP Garage",
+            "url": "https://www.facebook.com/l.php?u=https%3A%2F%2Fwww.bing.com%2Fmaps%2Fdefault.aspx%3Fv%3D2%26pc%3DFACEBK%26mid%3D8100%26where1%3D367%2BAddison%2BAve%252C%2BPalo%2BAlto%252C%2BCalifornia%2B94301%26FORM%3DFBKPL1%26mkt%3Den-US&h=BAQENaLCg&s=1&enc=AZONX8Q0PyBC1lJidXBGQLBsiB-_tEqSr2Mqsr9cwL4ms2YBXp1V1dAcn35Hk0hTbv6fGfk6HFDivTI5Se-BJP3csnDYgps4czoKy2DBe2IIEQ",
+            "type": "location",
+            "payload": {
+              "coordinates": {
+                "lat": 37.4430389,
+                "long": -122.1546631
+              }
+            }
+          }]
+        }
+      }]
+    }]
+  },
+
+  "+expected":
+  {
+    "plan": 13,
+    "entry": [{
+      "messaging": [{
+        "message": {
+          "type": "attachment",
+          "user": {
+            "id": "10157033896470455"
+          }
+        }
+      }]
+    }]
+  }
+}

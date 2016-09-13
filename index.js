@@ -3,9 +3,9 @@ var util       = require('util')
   , bole       = require('bole')
   , merge      = require('deeply')
   , agnostic   = require('agnostic')
-  , cache      = require('async-cache')
-  , stringify  = require('fast-safe-stringify')
-  , handler    = require('./lib/handler.js')
+  // , cache      = require('async-cache')
+  // , stringify  = require('fast-safe-stringify')
+  , receive   = require('./lib/receive.js')
   , middleware = require('./lib/middleware.js')
   , incoming   = require('./incoming/index.js')
   , outgoing   = require('./outgoing/index.js')
@@ -25,12 +25,13 @@ Fbbot.logger = bole;
 
 // add middleware methods
 Fbbot.prototype.use = middleware.use;
+
+// -- private methods
+
 // no need to expose middleware handler as public api
-Fbbot.prototype.run = middleware.run;
+Fbbot.prototype._run = middleware.run;
 // processing entry point
-Fbbot.prototype.handler = handler;
-
-
+Fbbot.prototype._receive = receive;
 
 /**
  * Fbbot instance constructor
@@ -93,14 +94,9 @@ Fbbot.prototype._handler = function(request, respond)
   // https://developers.facebook.com/docs/messenger-platform/webhook-reference#response
   respond(200);
 
-  // let request to finish, then do our thing
-  process.nextTick(function()
+  this._receive(request.body, function(err /*, payload*/)
   {
-    // kind of, process no-event middleware
-    this.handler(request.body, function(err, payload)
-    {
-  console.log('\n\n+++ FINISHED PAYLOAD:', err, '<>', JSON.stringify(payload, null, 2), '\n\n');
-    });
+    this.emit('end', err);
   }.bind(this));
 };
 

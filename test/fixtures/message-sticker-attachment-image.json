@@ -1,0 +1,50 @@
+{
+  "headers": {
+    "host": "localhost",
+    "accept": "*/*",
+    "accept-encoding": "deflate, gzip",
+    "content-type": "application/json"
+  },
+  "body": {
+    "object": "page",
+    "entry": [{
+      "id": "514061682115264",
+      "time": 1469431589130,
+      "messaging": [{
+        "sender": {
+          "id": "10157033896470455"
+        },
+        "recipient": {
+          "id": "514061682115264"
+        },
+        "timestamp": 1469431589103,
+        "message": {
+          "mid": "mid.1469431589088:5de10f231496154062",
+          "seq": 2246,
+          "sticker_id": 610917939033960,
+          "attachments": [{
+            "type": "image",
+            "payload": {
+              "url": "https://scontent.xx.fbcdn.net/t39.1997-6/p100x100/12056965_787824108010008_1642362681_n.png?_nc_ad=z-m"
+            }
+          }]
+        }
+      }]
+    }]
+  },
+
+  "+expected":
+  {
+    "plan": 13,
+    "entry": [{
+      "messaging": [{
+        "message": {
+          "type": "sticker",
+          "user": {
+            "id": "10157033896470455"
+          }
+        }
+      }]
+    }]
+  }
+}

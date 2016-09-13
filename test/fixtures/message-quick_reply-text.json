@@ -1,0 +1,57 @@
+{
+  "headers": {
+    "host": "localhost",
+    "accept": "*/*",
+    "accept-encoding": "deflate, gzip",
+    "content-type": "application/json"
+  },
+  "body": {
+    "object": "page",
+    "entry": [{
+      "id": "514061682115264",
+      "time": 1469433306866,
+      "messaging": [{
+        "sender": {
+          "id": "10157033896470455"
+        },
+        "recipient": {
+          "id": "514061682115264"
+        },
+        "timestamp": 1469433306846,
+        "message": {
+          "quick_reply": {
+            "payload": "{\"developer\": {\"defined\": {\"payload\": \"for\", \"picking\": \"red\"}}}"
+          },
+          "mid": "mid.1469433306838:778f28c4921a57d296",
+          "seq": 2277,
+          "text": "Red"
+        }
+      }]
+    }]
+  },
+
+  "+expected":
+  {
+    "plan": 14,
+    "entry": [{
+      "messaging": [{
+        "message": {
+          "type": "quick_reply",
+          "user": {
+            "id": "10157033896470455"
+          },
+          "quick_reply": {
+            "payload": {
+              "developer": {
+                "defined": {
+                  "payload": "for",
+                  "picking": "red"
+                }
+              }
+            }
+          }
+        }
+      }]
+    }]
+  }
+}

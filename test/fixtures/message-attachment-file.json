@@ -1,0 +1,49 @@
+{
+  "headers": {
+    "host": "localhost",
+    "accept": "*/*",
+    "accept-encoding": "deflate, gzip",
+    "content-type": "application/json"
+  },
+  "body": {
+    "object": "page",
+    "entry": [{
+      "id": "514061682115264",
+      "time": 1469435039346,
+      "messaging": [{
+        "sender": {
+          "id": "10157033896470455"
+        },
+        "recipient": {
+          "id": "514061682115264"
+        },
+        "timestamp": 1469435039310,
+        "message": {
+          "mid": "mid.1469435039239:1fc6e19f056a982685",
+          "seq": 2279,
+          "attachments": [{
+            "type": "file",
+            "payload": {
+              "url": "https://cdn.fbsbx.com/v/t59.2708-21/13709196_10157298449080455_1367318841_n.txt/hist_example.txt?oh=8e928a230dba2dc6418e10e40f0535ea&oe=57984ED2"
+            }
+          }]
+        }
+      }]
+    }]
+  },
+
+  "+expected":
+  {
+    "plan": 13,
+    "entry": [{
+      "messaging": [{
+        "message": {
+          "type": "attachment",
+          "user": {
+            "id": "10157033896470455"
+          }
+        }
+      }]
+    }]
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "headers": {
+    "host": "localhost",
+    "accept": "*/*",
+    "accept-encoding": "deflate, gzip",
+    "content-type": "application/json"
+  },
+  "body": {
+    "object": "page",
+    "entry": [{
+      "id": "514061682115264",
+      "time": 1469431745244,
+      "messaging": [{
+        "sender": {
+          "id": "10157033896470455"
+        },
+        "recipient": {
+          "id": "514061682115264"
+        },
+        "timestamp": 1469431745203,
+        "message": {
+          "mid": "mid.1469431744913:f67f0fa3b14a987b03",
+          "seq": 2247,
+          "attachments": [{
+            "type": "audio",
+            "payload": {
+              "url": "https://cdn.fbsbx.com/v/t59.3654-21/13841407_10157298310850455_866757824_n.aac/audioclip-1469431744746-9754.aac?oh=05ffa0fe133d7c2ea46764f7bde172f4&oe=57978D3A"
+            }
+          }]
+        }
+      }]
+    }]
+  },
+
+  "+expected":
+  {
+    "plan": 13,
+    "entry": [{
+      "messaging": [{
+        "message": {
+          "type": "attachment",
+          "user": {
+            "id": "10157033896470455"
+          }
+        }
+      }]
+    }]
+  }
+}

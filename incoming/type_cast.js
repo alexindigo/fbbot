@@ -1,3 +1,5 @@
+var normalize = require('../lib/normalize.js');
+
 module.exports = typeCast;
 
 // order here is important, not just alphabetical, although I did try to keep it nice
@@ -17,35 +19,20 @@ var types = [
   'text'
 ];
 
-var canonical = {
-  'sticker_id' : 'sticker',
-  'attachments': 'attachment'
-};
-
+/**
+ * Casts message type based on the present fields from the list
+ *
+ * @param {object} payload - message object
+ * @param {function} callback - invoked after type casting is done
+ */
 function typeCast(payload, callback)
 {
   var type = types.find(function(t){ return (t in payload); });
 
   if (type)
   {
-    // make it as non-enumerable and frozen
-    Object.defineProperty(payload, 'type', {
-      value: normalize(type)
-    });
+    payload.type = normalize(type);
   }
 
-console.log('\n\n\n --- type cast --- \n>>', type, '<< + ', payload, '\n++++++\n\n\n');
-
   callback(null, payload);
-}
-
-/**
- * normalizes name to use within public interfaces
- *
- * @param   {string} type - internal protocol naming
- * @returns {string} - normalized "public" naming
- */
-function normalize(type)
-{
-  return canonical[type] || type;
 }

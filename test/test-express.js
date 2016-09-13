@@ -1,99 +1,56 @@
 var express    = require('express')
-  , bodyParser = require('body-parser')
-  , test       = require('tape')
+//  , bodyParser = require('body-parser')
+  , tape       = require('tape')
   , common     = require('./common.js')
+  , shared     = require('./shared-tests.js')
   , Fbbot      = require('../')
   ;
 
-test('text message with express', function(t)
+tape('express', function(test)
 {
-  t.plan(5);
-
-  var server
-    , app   = express()
-    , fbbot = new Fbbot(common.fbbot)
-    ;
-
-  // use middleware
-  fbbot.use(function(payload, cb)
+  common.iterateRequests(function(request, handle, callback)
   {
-    t.deepEquals(payload, common.requests['text'].body, 'global middleware should receive full payload');
-    cb(null, payload);
-  });
+    var payloadType = handle.split('-')[0];
 
-  // message event
-  fbbot.on('message', function(message)
-  {
-    t.deepEquals(message, common.requests['text'].body.entry[0].messaging[0].message, 'message event should receive only message object');
-  });
-
-  // fbbot.on('message.text', function(message)
-  // {
-  //   t.deepEquals(message, common.requests['text'].body.entry[0].messaging[0], 'message event should receive only message object');
-  // });
-
-  // plug-in fbbot
-  app.use(common.server.endpoint, fbbot.requestHandler);
-
-  // start the server
-  server = app.listen(common.server.port, function()
-  {
-    common.sendRequest('text', function(error, response)
+    test.test('with ' + handle, function(t)
     {
-      t.error(error, 'should be no error');
-      t.equal(response.statusCode, 200, 'should return code 200');
+      t.plan(request.expected.plan);
 
-      server.close(function()
+      var server
+        , app   = express()
+        , fbbot = new Fbbot(common.fbbot)
+        ;
+
+      // run request wide tests
+      shared.perRequest(fbbot, payloadType, request, t, callback);
+
+      // iterate over entries-messages
+      request.expected.entry.forEach(function(entry)
       {
-        t.ok(true, 'make sure server is closed');
+        entry.messaging.forEach(function(message)
+        {
+          shared.perMessage(fbbot, payloadType, message, t);
+        });
       });
-    });
-  });
 
-});
+      // plug-in fbbot
+      app.use(common.server.endpoint, fbbot.requestHandler);
 
-test('attachments-image message with express', function(t)
-{
-  t.plan(5);
-
-  var server
-    , app   = express()
-    , fbbot = new Fbbot(common.fbbot)
-    ;
-
-  // use middleware
-  fbbot.use(function(payload, cb)
-  {
-    t.deepEquals(payload, common.requests['attachments-image'].body, 'global middleware should receive full payload');
-    cb(null, payload);
-  });
-
-  // message event
-  fbbot.on('message', function(message)
-  {
-    t.deepEquals(message, common.requests['attachments-image'].body.entry[0].messaging[0].message, 'message event should receive only message object');
-  });
-
-  // fbbot.on('message.text', function(message)
-  // {
-  //   t.deepEquals(message, common.requests['text'].body.entry[0].messaging[0], 'message event should receive only message object');
-  // });
-
-  // plug-in fbbot
-  app.use(common.server.endpoint, fbbot.requestHandler);
-
-  // start the server
-  server = app.listen(common.server.port, function()
-  {
-    common.sendRequest('attachments-image', function(error, response)
-    {
-      t.error(error, 'should be no error');
-      t.equal(response.statusCode, 200, 'should return code 200');
-
-      server.close(function()
+      // start the server
+      server = app.listen(common.server.port, function()
       {
-        t.ok(true, 'make sure server is closed');
+        common.sendRequest(handle, function(error, response)
+        {
+          t.error(error, 'should be no error');
+          t.equal(response.statusCode, 200, 'should return code 200');
+
+          server.close(function()
+          {
+            t.ok(true, 'make sure server is closed');
+          });
+        });
       });
+
     });
   });
 
