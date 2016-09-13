@@ -16,7 +16,7 @@ var app = express();
 var fbbot = new Fbbot({token: '...', secret: '...'});
 
 // plug-in fbbot
-app.use('/webhook', fbbot.requestHandler);
+app.all('/webhook', fbbot.requestHandler);
 // assuming HTTPS is terminated elsewhere,
 // or you can use standard express https capabilities
 app.listen(8080);

@@ -34,7 +34,7 @@ tape('express', function(test)
       });
 
       // plug-in fbbot
-      app.use(common.server.endpoint, fbbot.requestHandler);
+      app.all(common.server.endpoint, fbbot.requestHandler);
 
       // start the server
       server = app.listen(common.server.port, function()
