@@ -1,6 +1,6 @@
 {
   "name": "fbbot",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Minimal framework/SDK for facebook messenger bots. BYOS (Bring Your Own Server)",
   "main": "index.js",
   "scripts": {
