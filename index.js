@@ -1,11 +1,12 @@
-var util       = require('util')
+var qs         = require('querystring')
+  , util       = require('util')
   , events     = require('events')
   , bole       = require('bole')
   , merge      = require('deeply')
   , agnostic   = require('agnostic')
-  // , cache      = require('async-cache')
-  // , stringify  = require('fast-safe-stringify')
-  , receive   = require('./lib/receive.js')
+  , cache      = require('async-cache')
+  , stringify  = require('fast-safe-stringify')
+  , receive    = require('./lib/receive.js')
   , middleware = require('./lib/middleware.js')
   , incoming   = require('./incoming/index.js')
   , outgoing   = require('./outgoing/index.js')
@@ -68,7 +69,7 @@ function Fbbot(options)
   // wrap `_handler` with agnostic to accommodate different http servers
   this.requestHandler = agnostic(this._handler.bind(this));
 
-  // attach lyfecycle filters
+  // attach lifecycle filters
   incoming(this);
   outgoing(this);
 }
@@ -82,13 +83,19 @@ function Fbbot(options)
  */
 Fbbot.prototype._handler = function(request, respond)
 {
+  this.logger.info(request);
+
+console.log('-001-');
+
   // GET request handling
   if (request.method == 'GET')
   {
-    this.log.info();
+console.log('-002-');
+
     this._verifyEndpoint(request, respond);
     return;
   }
+console.log('-003-');
 
   // as per facebook doc – respond as soon as non-humanly possible, always respond with 200 OK
   // https://developers.facebook.com/docs/messenger-platform/webhook-reference#response
@@ -109,11 +116,16 @@ Fbbot.prototype._handler = function(request, respond)
  */
 Fbbot.prototype._verifyEndpoint = function(request, respond)
 {
+  if (typeof request.query == 'string')
+console.log('-004-', request.query);
+
   if (request.query.hub && request.query.hub.verify_token === this.credentials.secret)
   {
+    this.logger.debug({message: 'Successfully verified', challenge: request.query.hub.challenge});
     respond(request.query.hub.challenge);
     return;
   }
 
-  respond('Error, wrong validation token');
+  this.logger.error({message: 'Unable to verify endpoint', query: request.query});
+  respond(400, 'Error, wrong validation token');
 };

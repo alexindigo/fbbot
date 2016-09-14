@@ -1,9 +1,8 @@
-var express    = require('express')
-//  , bodyParser = require('body-parser')
-  , tape       = require('tape')
-  , common     = require('./common.js')
-  , shared     = require('./shared-tests.js')
-  , Fbbot      = require('../')
+var express = require('express')
+  , tape    = require('tape')
+  , common  = require('./common.js')
+  , shared  = require('./shared-tests.js')
+  , Fbbot   = require('../')
   ;
 
 tape('express', function(test)
@@ -53,5 +52,32 @@ tape('express', function(test)
 
     });
   });
+
+});
+
+tape.only('handshake', function(t)
+{
+      var server
+        , app   = express()
+        , fbbot = new Fbbot(common.fbbot)
+        ;
+
+      // plug-in fbbot
+      app.all(common.server.endpoint, fbbot.requestHandler);
+
+      // start the server
+      server = app.listen(common.server.port, function()
+      {
+        common.sendHandshake('ok', function(error, response)
+        {
+          t.error(error, 'should be no error');
+          t.equal(response.statusCode, 200, 'should return code 200');
+
+          server.close(function()
+          {
+            t.ok(true, 'make sure server is closed');
+          });
+        });
+      });
 
 });

@@ -1,4 +1,5 @@
-var path       = require('path')
+var qs         = require('querystring')
+  , path       = require('path')
   , glob       = require('glob')
   , merge      = require('deeply')
   , assert     = require('assert')
@@ -28,6 +29,25 @@ var common = module.exports =
   // shared methods
   sendRequest    : sendRequest,
   iterateRequests: iterateRequests,
+  sendHandshake  : sendHandshake,
+
+  // test handshake
+  handshakes: {
+    // sends proper fields
+    'ok': {
+      query: {
+        'hub.verify_token': 'wear sunscreen',
+        'hub.challenge'   : Math.random()
+      }
+    },
+
+    // sends unacceptable data
+    'bad': {
+      query: {
+        'hub.verify_token': 'XXXXX-wrong-token-XXXXX'
+      }
+    }
+  },
 
   // test requests
   requests: {}
@@ -72,16 +92,22 @@ function sendRequest(type, callback)
 
   var options = {
     method  : 'POST',
-    // port    : common.server.port,
-    // path    : common.server.endpoint,
     headers : common.requests[type].headers
   };
-
   options.headers['content-length'] = body.length;
 
   var request = hyperquest('http://localhost:' + common.server.port + common.server.endpoint, options, callback);
 
-  request.write(body = JSON.stringify(common.requests[type].body));
+  request.write(body);
+}
 
-//  request.end();
+function sendHandshake(type, callback)
+{
+  if (!common.handshakes[type]) throw new Error('Unsupported handshake type: ' + type + '.');
+
+  var query = qs.stringify(common.handshakes[type].query);
+
+console.log('----QS++---', query);
+
+  hyperquest.get('http://localhost:' + common.server.port + common.server.endpoint + '?' + query, callback);
 }
