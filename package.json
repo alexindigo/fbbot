@@ -14,10 +14,11 @@
     "get-version": "node -e \"console.log(require('./package.json').version)\"",
     "update-readme": "sed -i.bak 's/\\/master\\.svg/\\/v'$(npm --silent run get-version)'.svg/g' README.md",
     "restore-readme": "mv README.md.bak README.md",
-    "-prepublish": "in-publish && npm run update-readme || not-in-publish",
-    "-postpublish": "npm run restore-readme"
+    "prepublish": "in-publish && npm run update-readme || not-in-publish",
+    "postpublish": "npm run restore-readme"
   },
   "pre-commit": [
+    "lint",
     "test"
   ],
   "repository": {
@@ -48,12 +49,12 @@
     "express": "^4.14.0",
     "glob": "^7.0.6",
     "hapi": "^15.0.3",
+    "in-publish": "^2.0.0",
     "is-node-modern": "^1.0.0",
     "istanbul": "^0.4.5",
     "pre-commit": "^1.1.3",
     "restify": "^4.1.1",
     "rimraf": "^2.5.4",
-    "stack-trace": "0.0.9",
     "tap-spec": "^4.1.1",
     "tape": "^4.6.0"
   },
