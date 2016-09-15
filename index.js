@@ -1,11 +1,11 @@
-var qs         = require('querystring')
-  , util       = require('util')
+var util       = require('util')
   , events     = require('events')
   , bole       = require('bole')
   , merge      = require('deeply')
   , agnostic   = require('agnostic')
   , cache      = require('async-cache')
   , stringify  = require('fast-safe-stringify')
+  , verify     = require('./lib/verify_endpoint.js')
   , receive    = require('./lib/receive.js')
   , middleware = require('./lib/middleware.js')
   , incoming   = require('./incoming/index.js')
@@ -33,6 +33,8 @@ Fbbot.prototype.use = middleware.use;
 Fbbot.prototype._run = middleware.run;
 // processing entry point
 Fbbot.prototype._receive = receive;
+// verifies endpoint to facebook
+Fbbot.prototype._verifyEndpoint = verify;
 
 /**
  * Fbbot instance constructor
@@ -100,29 +102,4 @@ Fbbot.prototype._handler = function(request, respond)
   {
     this.emit('end', err);
   }.bind(this));
-};
-
-/**
- * Verifies endpoint by replying with the provided challenge
- *
- * @private
- * @param {EventEmitter} request - incoming http request object
- * @param {function} respond - http response function
- */
-Fbbot.prototype._verifyEndpoint = function(request, respond)
-{
-  if (typeof request.query == 'string')
-  {
-    request.query = qs.parse(request.query);
-  }
-
-  if (typeof request.query == 'object' && request.query['hub.verify_token'] === this.credentials.secret)
-  {
-    this.logger.debug({message: 'Successfully verified', challenge: request.query['hub.challenge']});
-    respond(request.query['hub.challenge']);
-    return;
-  }
-
-  this.logger.error({message: 'Unable to verify endpoint', query: request.query});
-  respond(400, 'Error, wrong validation token');
 };

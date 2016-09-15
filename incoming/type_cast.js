@@ -1,4 +1,6 @@
-var normalize = require('../lib/normalize.js');
+var find      = require('array-find')
+  , normalize = require('../lib/normalize.js')
+  ;
 
 module.exports = typeCast;
 
@@ -27,7 +29,7 @@ var types = [
  */
 function typeCast(payload, callback)
 {
-  var type = types.find(function(t){ return (t in payload); });
+  var type = find(types, function(t){ return (t in payload); });
 
   if (type)
   {

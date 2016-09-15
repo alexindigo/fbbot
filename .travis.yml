@@ -19,7 +19,7 @@ script:
   - uname -a
   - node --version
   - npm --version
-  # linting
+  - npm run clean
   - npm run ci-lint
   - npm run ci-test
 
