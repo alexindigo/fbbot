@@ -1,62 +1,65 @@
 var restify = require('restify')
   , tape    = require('tape')
   , common  = require('./common.js')
+  , shared  = require('./shared-tests.js')
   , Fbbot   = require('../')
   ;
 
-tape.test('restify minimal setup, no parser', function(t)
+tape('restify', function(test)
 {
-  t.plan(1);
-
-  var server = restify.createServer()
-    , fbbot = new Fbbot(common.fbbot)
-    ;
-
-// server.use(restify.bodyParser({ maxBodySize: 1024 * 1000 }));
-
-  // get events
-  fbbot.on('message', function(user, message)
+  common.iterateRequests(function(request, handle, callback)
   {
+    var payloadType = handle.split('-')[0];
 
-  });
-
-  // plug-in fbbot
-  server.get(common.server.endpoint, fbbot.requestHandler);
-  server.post(common.server.endpoint, fbbot.requestHandler);
-
-  // start the server
-  server.listen(common.server.port, function()
-  {
-
-    common.sendRequest('text', function(error, response)
+    test.test('with ' + handle, function(t)
     {
-//console.log('\n\n ----- REQUEST', error, 'vs', response.statusCode, '--', response.headers);
+      t.plan(request.expected.plan);
 
-      server.close(function()
+      var server = restify.createServer()
+        , fbbot  = new Fbbot(common.fbbot)
+        ;
+
+      // run request wide tests
+      shared.perRequest(fbbot, payloadType, request, t, callback);
+
+      // iterate over entries-messages
+      request.expected.entry.forEach(function(entry)
       {
-        t.ok(true);
+        entry.messaging.forEach(function(message)
+        {
+          shared.perMessage(fbbot, payloadType, message, t);
+        });
+      });
+
+      // plug-in fbbot
+      server.get(common.server.endpoint, fbbot.requestHandler);
+      server.post(common.server.endpoint, fbbot.requestHandler);
+
+      // start the server
+      server.listen(common.server.port, function()
+      {
+        common.sendRequest(handle, function(error, response)
+        {
+          t.error(error, 'POST request should return no error');
+          t.equal(response.statusCode, 200, 'POST request should return code 200');
+
+          server.close(function()
+          {
+            t.ok(true, 'make sure server is closed');
+          });
+        });
       });
     });
   });
-
 });
 
-tape.test('restify minimal setup, with bodyParser middleware', function(t)
+tape('restify - handshake - success', function(t)
 {
-  t.plan(1);
+  t.plan(4);
 
   var server = restify.createServer()
     , fbbot = new Fbbot(common.fbbot)
     ;
-
-  // get events
-  fbbot.on('message', function(user, message)
-  {
-
-  });
-
-  // attach bodyParser
-  server.use(restify.bodyParser({ maxBodySize: 1024 * 1000 }));
 
   // plug-in fbbot
   server.get(common.server.endpoint, fbbot.requestHandler);
@@ -65,15 +68,45 @@ tape.test('restify minimal setup, with bodyParser middleware', function(t)
   // start the server
   server.listen(common.server.port, function()
   {
-    common.sendRequest('text', function(error, response)
+    common.sendHandshake('ok', function(error, response)
     {
-//console.log('\n\n ----- REQUEST', error, 'vs', response.statusCode, '--', response.headers);
+      t.error(error, 'GET request should return no error');
+      t.equal(response.statusCode, 200, 'GET request should return code 200');
+      t.equal(response.body, common.handshakes['ok'].query['hub.challenge'], 'should receive provided challenge back');
 
       server.close(function()
       {
-        t.ok(true);
+        t.ok(true, 'make sure server is closed');
       });
     });
   });
+});
 
+tape('restify - handshake - failed', function(t)
+{
+  t.plan(4);
+
+  var server = restify.createServer()
+    , fbbot = new Fbbot(common.fbbot)
+    ;
+
+  // plug-in fbbot
+  server.get(common.server.endpoint, fbbot.requestHandler);
+  server.post(common.server.endpoint, fbbot.requestHandler);
+
+  // start the server
+  server.listen(common.server.port, function()
+  {
+    common.sendHandshake('bad', function(error, response)
+    {
+      t.error(error, 'GET request should return no error');
+      t.equal(response.statusCode, 400, 'GET request should return code 400');
+      t.equal(response.body, common.handshakes['bad'].error, 'should received error message');
+
+      server.close(function()
+      {
+        t.ok(true, 'make sure server is closed');
+      });
+    });
+  });
 });

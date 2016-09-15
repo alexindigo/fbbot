@@ -66,40 +66,82 @@ tape('hapi', function(test)
 
 });
 
-
-tape.only('handshake', function(t)
+tape('hapi - handshake - success', function(t)
 {
-      var server = new Hapi.Server()
-        , fbbot  = new Fbbot(common.fbbot)
-        ;
+  t.plan(4);
 
-      // setup hapi server
-      server.connection({ port: common.server.port });
+  var server = new Hapi.Server()
+    , fbbot  = new Fbbot(common.fbbot)
+    ;
 
-      // plug-in fbbot
-      server.route({
-        method: 'GET',
-        path: common.server.endpoint,
-        handler: fbbot.requestHandler
-      });
-      server.route({
-        method: 'POST',
-        path: common.server.endpoint,
-        handler: fbbot.requestHandler
-      });
+  // setup hapi server
+  server.connection({ port: common.server.port });
 
-      // start the server
-      server.start(function()
+  // plug-in fbbot
+  server.route({
+    method: 'GET',
+    path: common.server.endpoint,
+    handler: fbbot.requestHandler
+  });
+  server.route({
+    method: 'POST',
+    path: common.server.endpoint,
+    handler: fbbot.requestHandler
+  });
+
+  // start the server
+  server.start(function()
+  {
+    common.sendHandshake('ok', function(error, response)
+    {
+      t.error(error, 'GET request should return no error');
+      t.equal(response.statusCode, 200, 'GET request should return code 200');
+      t.equal(response.body, common.handshakes['ok'].query['hub.challenge'], 'should receive provided challenge back');
+
+      server.stop(function()
       {
-        common.sendHandshake('ok', function(error, response)
-        {
-          t.error(error, 'should be no error');
-          t.equal(response.statusCode, 200, 'should return code 200');
-
-          server.stop(function()
-          {
-            t.ok(true, 'make sure server is closed');
-          });
-        });
+        t.ok(true, 'make sure server is closed');
       });
+    });
+  });
+});
+
+tape('hapi - handshake - failed', function(t)
+{
+  t.plan(4);
+
+  var server = new Hapi.Server()
+    , fbbot  = new Fbbot(common.fbbot)
+    ;
+
+  // setup hapi server
+  server.connection({ port: common.server.port });
+
+  // plug-in fbbot
+  server.route({
+    method: 'GET',
+    path: common.server.endpoint,
+    handler: fbbot.requestHandler
+  });
+  server.route({
+    method: 'POST',
+    path: common.server.endpoint,
+    handler: fbbot.requestHandler
+  });
+
+  // start the server
+  server.start(function()
+  {
+    common.sendHandshake('bad', function(error, response)
+    {
+      t.error(error, 'GET request should return no error');
+      t.equal(response.statusCode, 400, 'GET request should return code 400');
+      t.equal(response.body, common.handshakes['bad'].error, 'should received error message');
+
+      server.stop(function()
+      {
+        t.ok(true, 'make sure server is closed');
+      });
+    });
+  });
 });

@@ -40,8 +40,8 @@ tape('express', function(test)
       {
         common.sendRequest(handle, function(error, response)
         {
-          t.error(error, 'should be no error');
-          t.equal(response.statusCode, 200, 'should return code 200');
+          t.error(error, 'POST request should return no error');
+          t.equal(response.statusCode, 200, 'POST request should return code 200');
 
           server.close(function()
           {
@@ -55,29 +55,60 @@ tape('express', function(test)
 
 });
 
-tape.only('handshake', function(t)
+tape('express - handshake - success', function(t)
 {
-      var server
-        , app   = express()
-        , fbbot = new Fbbot(common.fbbot)
-        ;
+  t.plan(4);
 
-      // plug-in fbbot
-      app.all(common.server.endpoint, fbbot.requestHandler);
+  var server
+    , app   = express()
+    , fbbot = new Fbbot(common.fbbot)
+    ;
 
-      // start the server
-      server = app.listen(common.server.port, function()
+  // plug-in fbbot
+  app.all(common.server.endpoint, fbbot.requestHandler);
+
+  // start the server
+  server = app.listen(common.server.port, function()
+  {
+    common.sendHandshake('ok', function(error, response)
+    {
+      t.error(error, 'GET request should return no error');
+      t.equal(response.statusCode, 200, 'GET request should return code 200');
+      t.equal(response.body, common.handshakes['ok'].query['hub.challenge'], 'should receive provided challenge back');
+
+      server.close(function()
       {
-        common.sendHandshake('ok', function(error, response)
-        {
-          t.error(error, 'should be no error');
-          t.equal(response.statusCode, 200, 'should return code 200');
-
-          server.close(function()
-          {
-            t.ok(true, 'make sure server is closed');
-          });
-        });
+        t.ok(true, 'make sure server is closed');
       });
+    });
+  });
+});
 
+tape('express - handshake - failed', function(t)
+{
+  t.plan(4);
+
+  var server
+    , app   = express()
+    , fbbot = new Fbbot(common.fbbot)
+    ;
+
+  // plug-in fbbot
+  app.all(common.server.endpoint, fbbot.requestHandler);
+
+  // start the server
+  server = app.listen(common.server.port, function()
+  {
+    common.sendHandshake('bad', function(error, response)
+    {
+      t.error(error, 'GET request should return no error');
+      t.equal(response.statusCode, 400, 'GET request should return code 400');
+      t.equal(response.body, common.handshakes['bad'].error, 'should received error message');
+
+      server.close(function()
+      {
+        t.ok(true, 'make sure server is closed');
+      });
+    });
+  });
 });

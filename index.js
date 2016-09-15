@@ -85,17 +85,12 @@ Fbbot.prototype._handler = function(request, respond)
 {
   this.logger.info(request);
 
-console.log('-001-');
-
   // GET request handling
   if (request.method == 'GET')
   {
-console.log('-002-');
-
     this._verifyEndpoint(request, respond);
     return;
   }
-console.log('-003-');
 
   // as per facebook doc – respond as soon as non-humanly possible, always respond with 200 OK
   // https://developers.facebook.com/docs/messenger-platform/webhook-reference#response
@@ -117,12 +112,14 @@ console.log('-003-');
 Fbbot.prototype._verifyEndpoint = function(request, respond)
 {
   if (typeof request.query == 'string')
-console.log('-004-', request.query);
-
-  if (request.query.hub && request.query.hub.verify_token === this.credentials.secret)
   {
-    this.logger.debug({message: 'Successfully verified', challenge: request.query.hub.challenge});
-    respond(request.query.hub.challenge);
+    request.query = qs.parse(request.query);
+  }
+
+  if (typeof request.query == 'object' && request.query['hub.verify_token'] === this.credentials.secret)
+  {
+    this.logger.debug({message: 'Successfully verified', challenge: request.query['hub.challenge']});
+    respond(request.query['hub.challenge']);
     return;
   }
 

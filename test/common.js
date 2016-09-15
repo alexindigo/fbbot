@@ -1,10 +1,10 @@
-var qs         = require('querystring')
-  , path       = require('path')
-  , glob       = require('glob')
-  , merge      = require('deeply')
-  , assert     = require('assert')
-  , asynckit   = require('asynckit')
-  , hyperquest = require('hyperquest')
+var qs       = require('querystring')
+  , path     = require('path')
+  , glob     = require('glob')
+  , merge    = require('deeply')
+  , assert   = require('assert')
+  , asynckit = require('asynckit')
+  , request  = require('../lib/request.js')
     // turn on array combination
   , mergeArrays = {
     useCustomAdapters: merge.behaviors.useCustomAdapters,
@@ -37,7 +37,7 @@ var common = module.exports =
     'ok': {
       query: {
         'hub.verify_token': 'wear sunscreen',
-        'hub.challenge'   : Math.random()
+        'hub.challenge'   : '' + Math.random()
       }
     },
 
@@ -45,7 +45,8 @@ var common = module.exports =
     'bad': {
       query: {
         'hub.verify_token': 'XXXXX-wrong-token-XXXXX'
-      }
+      },
+      error: 'Error, wrong validation token'
     }
   },
 
@@ -88,6 +89,7 @@ function sendRequest(type, callback)
 {
   if (!common.requests[type]) throw new Error('Unsupported request type: ' + type + '.');
 
+  var url  = 'http://localhost:' + common.server.port + common.server.endpoint;
   var body = JSON.stringify(common.requests[type].body);
 
   var options = {
@@ -96,18 +98,21 @@ function sendRequest(type, callback)
   };
   options.headers['content-length'] = body.length;
 
-  var request = hyperquest('http://localhost:' + common.server.port + common.server.endpoint, options, callback);
-
-  request.write(body);
+  request(url, options, callback).write(body);
 }
 
+/**
+ * Sends handshake based on the requested typed
+ *
+ * @param {string} type - handshake type, `ok` or `bad`
+ * @param {function} callback - invoked on response
+ */
 function sendHandshake(type, callback)
 {
   if (!common.handshakes[type]) throw new Error('Unsupported handshake type: ' + type + '.');
 
+  var url   = 'http://localhost:' + common.server.port + common.server.endpoint;
   var query = qs.stringify(common.handshakes[type].query);
 
-console.log('----QS++---', query);
-
-  hyperquest.get('http://localhost:' + common.server.port + common.server.endpoint + '?' + query, callback);
+  request(url + '?' + query, callback);
 }

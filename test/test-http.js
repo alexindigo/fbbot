@@ -1,60 +1,46 @@
 var http   = require('http')
   , tape   = require('tape')
   , common = require('./common.js')
+  , shared = require('./shared-tests.js')
   , Fbbot  = require('../')
   ;
 
-tape.test('http.createServer minimal setup', function(t)
+tape('http', function(test)
 {
-  t.plan(2);
-
-  var server, fbbot  = new Fbbot(common.fbbot);
-
-  // get events
-  fbbot.on('message', function(user, message)
+  common.iterateRequests(function(request, handle, callback)
   {
+    var payloadType = handle.split('-')[0];
 
-  });
-
-  // plug-in fbbot
-  server = http.createServer(fbbot.requestHandler);
-
-  // start the server
-  server.listen(common.server.port, function(err)
-  {
-    t.error(err);
-
-    common.sendRequest('text', function(error, response)
+    test.test('with ' + handle, function(t)
     {
-// console.log('\n\n ----- REQUEST', error);
-// console.log('\n\n ----- REQUEST', 'vs', response.statusCode, '--', response.headers);
+      t.plan(request.expected.plan);
 
-      server.close(function()
-      {
-        t.ok(true);
-      });
-
-    });
-  });
-
-});
-
-tape.only('handshake', function(t)
-{
-      var fbbot = new Fbbot(common.fbbot)
-        , server
+      var server
+        , fbbot = new Fbbot(common.fbbot)
         ;
 
-      // plug-in fbbot
+      // run request wide tests
+      shared.perRequest(fbbot, payloadType, request, t, callback);
+
+      // iterate over entries-messages
+      request.expected.entry.forEach(function(entry)
+      {
+        entry.messaging.forEach(function(message)
+        {
+          shared.perMessage(fbbot, payloadType, message, t);
+        });
+      });
+
+      // create server plug-in fbbot
       server = http.createServer(fbbot.requestHandler);
 
       // start the server
-      server.listen(common.server.port, function(err)
+      server.listen(common.server.port, function()
       {
-        common.sendHandshake('ok', function(error, response)
+        common.sendRequest(handle, function(error, response)
         {
-          t.error(error, 'should be no error');
-          t.equal(response.statusCode, 200, 'should return code 200');
+          t.error(error, 'POST request should return no error');
+          t.equal(response.statusCode, 200, 'POST request should return code 200');
 
           server.close(function()
           {
@@ -62,6 +48,62 @@ tape.only('handshake', function(t)
           });
         });
       });
+    });
+  });
+});
 
+tape('http - handshake - success', function(t)
+{
+  t.plan(4);
 
+  var server
+    , fbbot = new Fbbot(common.fbbot)
+    ;
+
+  // create server plug-in fbbot
+  server = http.createServer(fbbot.requestHandler);
+
+  // start the server
+  server.listen(common.server.port, function()
+  {
+    common.sendHandshake('ok', function(error, response)
+    {
+      t.error(error, 'GET request should return no error');
+      t.equal(response.statusCode, 200, 'GET request should return code 200');
+      t.equal(response.body, common.handshakes['ok'].query['hub.challenge'], 'should receive provided challenge back');
+
+      server.close(function()
+      {
+        t.ok(true, 'make sure server is closed');
+      });
+    });
+  });
+});
+
+tape('http - handshake - failed', function(t)
+{
+  t.plan(4);
+
+  var server
+    , fbbot = new Fbbot(common.fbbot)
+    ;
+
+  // create server plug-in fbbot
+  server = http.createServer(fbbot.requestHandler);
+
+  // start the server
+  server.listen(common.server.port, function()
+  {
+    common.sendHandshake('bad', function(error, response)
+    {
+      t.error(error, 'GET request should return no error');
+      t.equal(response.statusCode, 400, 'GET request should return code 400');
+      t.equal(response.body, common.handshakes['bad'].error, 'should received error message');
+
+      server.close(function()
+      {
+        t.ok(true, 'make sure server is closed');
+      });
+    });
+  });
 });
