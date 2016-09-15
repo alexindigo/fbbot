@@ -6,6 +6,7 @@
   "scripts": {
     "clean": "rimraf coverage",
     "lint": "eslint *.js lib/*.js test/*.js",
+    "pretest": "is-node-not-modern && npm install hapi@10 || is-node-modern",
     "test": "tape test/test-*.js | tap-spec",
     "cover": "istanbul cover test/test-*.js | tap-spec",
     "preci-test": "is-node-not-modern && npm install hapi@10 || is-node-modern",
