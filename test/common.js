@@ -5,6 +5,7 @@ var qs       = require('querystring')
   , assert   = require('assert')
   , asynckit = require('asynckit')
   , request  = require('../lib/request.js')
+  , shared   = require('./shared-tests.js')
     // turn on array combination
   , mergeArrays = {
     useCustomAdapters: merge.behaviors.useCustomAdapters,
@@ -27,8 +28,9 @@ var common = module.exports =
   },
 
   // shared methods
-  sendRequest    : sendRequest,
+  setupTests     : setupTests,
   iterateRequests: iterateRequests,
+  sendRequest    : sendRequest,
   sendHandshake  : sendHandshake,
 
   // test handshake
@@ -67,6 +69,30 @@ glob.sync(path.join(__dirname, './fixtures/*.json')).forEach(function(file)
     common.requests[name].expected = merge.call(mergeArrays, common.requests[name].body, common.requests[name]['+expected']);
   }
 });
+
+/**
+ * Adds tests to the provided instance
+ *
+ * @param {object} fbbot - fbbot instance
+ * @param {string} payloadType - payload's type to test
+ * @param {object} subject - test request subject
+ * @param {object} t - test suite instance
+ * @param {function} callback - invoked after all tests for this payload type is done
+ */
+function setupTests(fbbot, payloadType, subject, t, callback)
+{
+  // run request wide tests
+  shared.perRequest(fbbot, payloadType, subject, t, callback);
+
+  // iterate over entries-messages
+  subject.expected.entry.forEach(function(entry)
+  {
+    entry.messaging.forEach(function(message)
+    {
+      shared.perMessage(fbbot, payloadType, message, t);
+    });
+  });
+}
 
 /**
  * Iterates over requests asynchronously

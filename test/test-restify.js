@@ -1,7 +1,6 @@
 var restify = require('restify')
   , tape    = require('tape')
   , common  = require('./common.js')
-  , shared  = require('./shared-tests.js')
   , Fbbot   = require('../')
   ;
 
@@ -19,17 +18,8 @@ tape('restify', function(test)
         , fbbot  = new Fbbot(common.fbbot)
         ;
 
-      // run request wide tests
-      shared.perRequest(fbbot, payloadType, request, t, callback);
-
-      // iterate over entries-messages
-      request.expected.entry.forEach(function(entry)
-      {
-        entry.messaging.forEach(function(message)
-        {
-          shared.perMessage(fbbot, payloadType, message, t);
-        });
-      });
+      // setup tests per instance
+      common.setupTests(fbbot, payloadType, request, t, callback);
 
       // plug-in fbbot
       server.get(common.server.endpoint, fbbot.requestHandler);
