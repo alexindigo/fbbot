@@ -10,6 +10,11 @@ Minimal framework/SDK for facebook messenger bots. BYOS (Bring Your Own Server).
 [![Dependency Status](https://img.shields.io/david/alexindigo/fbbot/master.svg?style=flat)](https://david-dm.org/alexindigo/fbbot)
 [![bitHound Overall Score](https://www.bithound.io/github/alexindigo/fbbot/badges/score.svg)](https://www.bithound.io/github/alexindigo/fbbot)
 
+[![express](https://img.shields.io/badge/express-tested-brightgreen.svg?style=flat)](http://expressjs.com)
+[![hapi](https://img.shields.io/badge/hapi-tested-brightgreen.svg?lstyle=flat)](http://hapijs.com)
+[![restify](https://img.shields.io/badge/restify-tested-brightgreen.svg?style=flat)](http://restify.com)
+[![http](https://img.shields.io/badge/http-tested-brightgreen.svg?style=flat)](https://nodejs.org/api/http.html)
+
 ## Work In Progress
 
 - Missing send method (with templates)
