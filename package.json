@@ -45,7 +45,7 @@
   },
   "homepage": "https://github.com/alexindigo/fbbot#readme",
   "devDependencies": {
-    "coveralls": "^2.11.12",
+    "coveralls": "^2.11.13",
     "eslint": "^3.5.0",
     "express": "^4.14.0",
     "glob": "^7.0.6",
