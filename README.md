@@ -19,6 +19,7 @@ Minimal framework/SDK for facebook messenger bots. BYOS (Bring Your Own Server).
 
 - Missing send method (with templates)
 - Missing fetch user info middleware
+- Missing initialization actions (welcome page, menu, white-listing, etc)
 
 ## Examples
 

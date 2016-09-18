@@ -7,6 +7,7 @@ var util       = require('util')
   // , stringify  = require('fast-safe-stringify')
   , verify     = require('./lib/verify_endpoint.js')
   , receive    = require('./lib/receive.js')
+  , send       = require('./lib/send.js')
   , middleware = require('./lib/middleware.js')
   , incoming   = require('./incoming/index.js')
   , outgoing   = require('./outgoing/index.js')
@@ -24,8 +25,13 @@ Fbbot.defaults = {
 // expose logger
 Fbbot.logger = bole;
 
-// add middleware methods
+// -- public methods
+
+// registers middleware
 Fbbot.prototype.use = middleware.use;
+
+// send message to a user
+Fbbot.prototype.send = send;
 
 // -- private methods
 
@@ -39,6 +45,7 @@ Fbbot.prototype._verifyEndpoint = verify;
 /**
  * Fbbot instance constructor
  *
+ * @this Fbbot#
  * @param {object} options - list of customization parameters
  * @constructor
  */
@@ -80,6 +87,7 @@ function Fbbot(options)
  * HTTP requests handler, could be used as middleware
  *
  * @private
+ * @this Fbbot#
  * @param {EventEmitter} request - incoming http request object
  * @param {function} respond - http response function
  */

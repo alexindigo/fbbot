@@ -2,7 +2,9 @@ module.exports = quickReply;
 
 /**
  * Parse quick reply payload
+ * Note: always expects postback payload to be JSON
  *
+ * @this  Fbbot#
  * @param {object} payload - messaging envelop object
  * @param {function} callback - invoked after type casting is done
  */

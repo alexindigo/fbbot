@@ -24,6 +24,7 @@ var types = [
 /**
  * Casts message type based on the present fields from the list
  *
+ * @this  Fbbot#
  * @param {object} payload - message object
  * @param {function} callback - invoked after type casting is done
  */

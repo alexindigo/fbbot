@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "rimraf coverage",
-    "lint": "eslint *.js lib/*.js test/*.js",
+    "lint": "eslint *.js */*.js",
     "pretest": "is-node-not-modern && npm install hapi@10 || is-node-modern",
     "test": "tape test/test-*.js | tap-spec",
     "cover": "istanbul cover tape -- test/test-*.js | tap-spec",
@@ -66,7 +66,7 @@
     "asynckit": "^0.4.0",
     "bole": "^3.0.1",
     "deeply": "^2.0.3",
-    "fast-safe-stringify": "^1.1.0",
-    "hyperquest": "^2.1.0"
+    "hyperquest": "^2.1.0",
+    "to-camel-case": "^1.0.0"
   }
 }
