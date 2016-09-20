@@ -11,6 +11,7 @@ var util       = require('util')
   , middleware = require('./lib/middleware.js')
   , incoming   = require('./incoming/index.js')
   , outgoing   = require('./outgoing/index.js')
+  , Traverse   = require('./traverse/index.js')
   ;
 
 module.exports = Fbbot;
@@ -81,6 +82,15 @@ function Fbbot(options)
   // attach lifecycle filters
   incoming(this);
   outgoing(this);
+
+  // create traverse paths
+  this.incoming = new Traverse(receive.steps, {
+    entry     : middleware.entryPoint,
+    middleware: receive.middleware.bind(this),
+    emitter   : receive.emitter.bind(this)
+  });
+  // wrap linkParent method
+  this.incoming.linkParent = receive.linkParent.bind(receive, this.incoming.linkParent);
 }
 
 /**
@@ -106,8 +116,8 @@ Fbbot.prototype._handler = function(request, respond)
   // https://developers.facebook.com/docs/messenger-platform/webhook-reference#response
   respond(200);
 
-  this._receive(request.body, function(err /*, payload*/)
+  this.incoming.traverse(request.body, function(err, payload)
   {
-    this.emit('end', err);
+    this.emit('end', err, payload);
   }.bind(this));
 };
