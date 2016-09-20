@@ -48,7 +48,7 @@
     "coveralls": "^2.11.12",
     "eslint": "^3.5.0",
     "express": "^4.14.0",
-    "glob": "^7.0.6",
+    "glob": "^7.1.0",
     "hapi": "^15.0.3",
     "in-publish": "^2.0.0",
     "is-node-modern": "^1.0.0",
