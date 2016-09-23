@@ -1,0 +1,344 @@
+[
+  {
+    "meta": {
+      "description": "Sending full message object with text"
+    },
+    "arguments": {
+      "user": "10157033896470455",
+      "type": "MESSAGE",
+      "data": {
+  	     "text": "hello, world!"
+       }
+    },
+
+    "expected": {
+      "recipient": {
+      	"id": "10157033896470455"
+      },
+      "message": {
+      	"text": "hello, world!"
+      }
+    },
+
+    "response": {
+      "recipient_id": "10157033896470455",
+      "message_id": "mid.1456970487936:c34767dfe57ee6e339"
+    }
+  },
+
+  {
+    "meta": {
+      "description": "Sending full message object with image attachment, with extra fields in the user object"
+    },
+    "arguments": {
+      "user": {
+        "id": "10157033896470456",
+        "phone_number": "1234567890",
+        "name": {
+          "last": "Smith",
+          "first": "John"
+        }
+      },
+      "type": "MESSAGE",
+      "data": {
+        "attachment": {
+          "type": "image",
+          "payload": {
+            "url": "https://petersapparel.com/img/shirt.png"
+          }
+        }
+      }
+    },
+
+    "expected": {
+      "recipient": {
+      	"id": "10157033896470456"
+      },
+      "message":{
+        "attachment": {
+          "type": "image",
+          "payload": {
+            "url": "https://petersapparel.com/img/shirt.png"
+          }
+        }
+      }
+    },
+
+    "response": {
+      "recipient_id": "10157033896470456",
+      "message_id": "mid.1456970487937:c34767dfe57ee6e339"
+    }
+  },
+
+  {
+    "meta": {
+      "description": "Sending full message object with audio attachment, with out message type argument (fallback to default)"
+    },
+    "arguments": {
+      "user": {
+        "id": "10157033896470457"
+      },
+      "data": {
+        "attachment": {
+          "type": "audio",
+          "payload": {
+            "url": "https://petersapparel.com/bin/clip.mp3"
+          }
+        }
+      }
+    },
+
+    "expected": {
+      "recipient": {
+      	"id": "10157033896470457"
+      },
+      "message":{
+        "attachment": {
+          "type": "audio",
+          "payload": {
+            "url": "https://petersapparel.com/bin/clip.mp3"
+          }
+        }
+      }
+    },
+
+    "response": {
+      "recipient_id": "10157033896470457",
+      "message_id": "mid.1456970487938:c34767dfe57ee6e339"
+    }
+  },
+
+  {
+    "meta": {
+      "description": "Sending full message object of the Generic Template"
+    },
+    "arguments": {
+      "user": {
+        "id": "10157033896470457"
+      },
+      "type": "MESSAGE",
+      "data": {
+        "attachment": {
+          "type": "template",
+          "payload": {
+            "template_type": "generic",
+            "elements": [{
+              "title": "Welcome to Peter's Hats",
+              "item_url": "https://petersfancybrownhats.com",
+              "image_url": "https://petersfancybrownhats.com/company_image.png",
+              "subtitle": "We've got the right hat for everyone.",
+              "buttons": [{
+                "type": "web_url",
+                "url": "https://petersfancybrownhats.com",
+                "title": "View Website"
+              }, {
+                "type": "postback",
+                "title": "Start Chatting",
+                "payload": "DEVELOPER_DEFINED_PAYLOAD"
+              }]
+            }]
+          }
+        }
+      }
+    },
+
+    "expected": {
+      "recipient": {
+      	"id": "10157033896470457"
+      },
+      "message": {
+        "attachment": {
+          "type": "template",
+          "payload": {
+            "template_type": "generic",
+            "elements": [{
+              "title": "Welcome to Peter's Hats",
+              "item_url": "https://petersfancybrownhats.com",
+              "image_url": "https://petersfancybrownhats.com/company_image.png",
+              "subtitle": "We've got the right hat for everyone.",
+              "buttons": [{
+                "type": "web_url",
+                "url": "https://petersfancybrownhats.com",
+                "title": "View Website"
+              }, {
+                "type": "postback",
+                "title": "Start Chatting",
+                "payload": "DEVELOPER_DEFINED_PAYLOAD"
+              }]
+            }]
+          }
+        }
+      }
+    },
+
+    "response": {
+      "recipient_id": "10157033896470457",
+      "message_id": "mid.1456970487938:c34767dfe57ee6e339"
+    }
+  },
+
+  {
+    "meta": {
+      "description": "Sending full message object with Receipt Template attachment, with out message type argument"
+    },
+    "arguments": {
+      "user": "10157033896470457",
+      "data": {
+        "attachment": {
+          "type": "template",
+          "payload": {
+            "template_type": "receipt",
+            "recipient_name": "Stephane Crozatier",
+            "order_number": "12345678902",
+            "currency": "USD",
+            "payment_method": "Visa 2345",
+            "order_url": "http://petersapparel.parseapp.com/order?order_id=123456",
+            "timestamp": "1428444852",
+            "elements": [{
+              "title": "Classic White T-Shirt",
+              "subtitle": "100% Soft and Luxurious Cotton",
+              "quantity": 2,
+              "price": 50,
+              "currency": "USD",
+              "image_url": "http://petersapparel.parseapp.com/img/whiteshirt.png"
+            }, {
+              "title": "Classic Gray T-Shirt",
+              "subtitle": "100% Soft and Luxurious Cotton",
+              "quantity": 1,
+              "price": 25,
+              "currency": "USD",
+              "image_url": "http://petersapparel.parseapp.com/img/grayshirt.png"
+            }],
+            "address": {
+              "street_1": "1 Hacker Way",
+              "street_2": "",
+              "city": "Menlo Park",
+              "postal_code": "94025",
+              "state": "CA",
+              "country": "US"
+            },
+            "summary": {
+              "subtotal": 75.00,
+              "shipping_cost": 4.95,
+              "total_tax": 6.19,
+              "total_cost": 56.14
+            },
+            "adjustments": [{
+              "name": "New Customer Discount",
+              "amount": 20
+            }, {
+              "name": "$10 Off Coupon",
+              "amount": 10
+            }]
+          }
+        }
+      }
+    },
+
+    "expected": {
+      "recipient": {
+      	"id": "10157033896470457"
+      },
+      "message": {
+        "attachment": {
+          "type": "template",
+          "payload": {
+            "template_type": "receipt",
+            "recipient_name": "Stephane Crozatier",
+            "order_number": "12345678902",
+            "currency": "USD",
+            "payment_method": "Visa 2345",
+            "order_url": "http://petersapparel.parseapp.com/order?order_id=123456",
+            "timestamp": "1428444852",
+            "elements": [{
+              "title": "Classic White T-Shirt",
+              "subtitle": "100% Soft and Luxurious Cotton",
+              "quantity": 2,
+              "price": 50,
+              "currency": "USD",
+              "image_url": "http://petersapparel.parseapp.com/img/whiteshirt.png"
+            }, {
+              "title": "Classic Gray T-Shirt",
+              "subtitle": "100% Soft and Luxurious Cotton",
+              "quantity": 1,
+              "price": 25,
+              "currency": "USD",
+              "image_url": "http://petersapparel.parseapp.com/img/grayshirt.png"
+            }],
+            "address": {
+              "street_1": "1 Hacker Way",
+              "street_2": "",
+              "city": "Menlo Park",
+              "postal_code": "94025",
+              "state": "CA",
+              "country": "US"
+            },
+            "summary": {
+              "subtotal": 75.00,
+              "shipping_cost": 4.95,
+              "total_tax": 6.19,
+              "total_cost": 56.14
+            },
+            "adjustments": [{
+              "name": "New Customer Discount",
+              "amount": 20
+            }, {
+              "name": "$10 Off Coupon",
+              "amount": 10
+            }]
+          }
+        }
+      }
+    },
+
+    "response": {
+      "recipient_id": "10157033896470457",
+      "message_id": "mid.1456970487938:c34767dfe57ee6e339"
+    }
+  },
+
+  {
+    "meta": {
+      "description": "Sending full message object with quick reply options"
+    },
+    "arguments": {
+      "user": "10157033896470458",
+      "type": "MESSAGE",
+      "data": {
+        "text": "Pick a color:",
+        "quick_replies": [{
+          "content_type": "text",
+          "title": "Red",
+          "payload": "DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+        }, {
+          "content_type": "text",
+          "title": "Green",
+          "payload": "DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
+        }]
+      }
+    },
+
+    "expected": {
+      "recipient": {
+      	"id": "10157033896470458"
+      },
+      "message": {
+        "text": "Pick a color:",
+        "quick_replies": [{
+          "content_type": "text",
+          "title": "Red",
+          "payload": "DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+        }, {
+          "content_type": "text",
+          "title": "Green",
+          "payload": "DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
+        }]
+      }
+    },
+
+    "response": {
+      "recipient_id": "10157033896470458",
+      "message_id": "mid.1456970487939:c34767dfe57ee6e339"
+    }
+  }
+]

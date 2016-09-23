@@ -1,0 +1,23 @@
+[
+  {
+    "arguments": {
+      "user": "10157033896470555",
+      "type": "TEXT",
+      "data": "hello bot!"
+    },
+
+    "expected": {
+      "recipient": {
+        "id": "10157033896470555"
+      },
+      "message": {
+        "text": "hello bot!"
+      }
+    },
+
+    "response": {
+      "recipient_id": "10157033896470555",
+      "message_id": "mid.1456970487948:c34767dfe57ee6e339"
+    }
+  }
+]

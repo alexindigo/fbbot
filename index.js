@@ -20,7 +20,8 @@ util.inherits(Fbbot, events.EventEmitter);
 // defaults
 Fbbot.defaults = {
   bodyMaxLength: '1mb',
-  bodyEncoding : 'utf8'
+  bodyEncoding : 'utf8',
+  apiUrl       : 'https://graph.facebook.com/v2.6/me/messages?access_token='
 };
 
 // expose logger
@@ -33,6 +34,9 @@ Fbbot.prototype.use = middleware.use;
 
 // send message to a user
 Fbbot.prototype.send = send;
+// add message types to the top level
+// shouldn't be conflicts since types are all uppercase
+util._extend(Fbbot.prototype, send.types);
 
 // -- private methods
 
@@ -69,6 +73,9 @@ function Fbbot(options)
     throw new Error('Both `token` (pageAccessToken) and `secret` (verifyToken) are required');
   }
 
+  // compose apiUrl
+  this.options.apiUrl += this.credentials.token;
+
   // expose logger
   this.logger = options.logger || bole(options.name || 'fbbot');
 
@@ -83,7 +90,7 @@ function Fbbot(options)
   incoming(this);
   outgoing(this);
 
-  // create traverse paths
+  // receive: create traverse paths
   this.incoming = new Traverse(receive.steps, {
     entry     : middleware.entryPoint,
     middleware: receive.middleware.bind(this),
@@ -91,6 +98,14 @@ function Fbbot(options)
   });
   // wrap linkParent method
   this.incoming.linkParent = receive.linkParent.bind(receive, this.incoming.linkParent);
+
+  // // send: create traverse paths
+  // this.outgoing = new Traverse(send.steps, {
+  //   middleware: send.middleware.bind(this),
+  //   emitter   : send.emitter.bind(this)
+  // });
+  // // wrap linkParent method
+  // this.incoming.linkParent = receive.linkParent.bind(receive, this.incoming.linkParent);
 }
 
 /**

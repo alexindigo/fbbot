@@ -1,0 +1,40 @@
+[
+  {
+    "arguments": {
+      "user": "10157033896470454",
+      "type": "TYPING_OFF"
+    },
+
+    "expected": {
+      "recipient": {
+        "id": "10157033896470454"
+      },
+      "sender_action": "typing_off"
+    },
+
+    "response": {
+      "recipient_id": "10157033896470454"
+    }
+  },
+
+  {
+    "arguments": {
+      "user": {
+        "id": "10157033896470464",
+        "unused": "field"
+      },
+      "type": "TYPING_OFF"
+    },
+
+    "expected": {
+      "recipient": {
+        "id": "10157033896470464"
+      },
+      "sender_action": "typing_off"
+    },
+
+    "response": {
+      "recipient_id": "10157033896470464"
+    }
+  }
+]

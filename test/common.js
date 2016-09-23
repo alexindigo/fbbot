@@ -1,9 +1,12 @@
 var qs       = require('querystring')
   , path     = require('path')
+  , http     = require('http')
+  , util     = require('util')
   , glob     = require('glob')
   , merge    = require('deeply')
   , assert   = require('assert')
   , asynckit = require('asynckit')
+  , agnostic = require('agnostic')
   , request  = require('../lib/request.js')
   , shared   = require('./shared-tests.js')
     // turn on array combination
@@ -21,6 +24,11 @@ var common = module.exports =
     port    : 56789
   },
 
+  api:
+  {
+    port: 45678
+  },
+
   // fbbot instance
   fbbot: {
     pageAccessToken: 'ESDQmINhZC1osBACNOI8aQWoOYR4vsMzxZAyeW8baL0xUFdmu123McxihZAZAMHZBhiubQWE0kRIzoA7RTVflZAOmAlBMNUhRdoXoQo0UGocJZAJkijqr4PwJ878onSJu0oigzaBEQCfkAPR2PAIXZB8qLjuegan7qTDl5cmntoBqxOwABAB',
@@ -30,8 +38,10 @@ var common = module.exports =
   // shared methods
   setupTests     : setupTests,
   iterateRequests: iterateRequests,
+  iterateSendings: iterateSendings,
   sendRequest    : sendRequest,
   sendHandshake  : sendHandshake,
+  startApiServer : startApiServer,
 
   // test handshake
   handshakes: {
@@ -53,11 +63,14 @@ var common = module.exports =
   },
 
   // test requests
-  requests: {}
+  requests: {},
+
+  // test api calls
+  sendings: {}
 };
 
 // load request fixtures
-glob.sync(path.join(__dirname, './fixtures/*.json')).forEach(function(file)
+glob.sync(path.join(__dirname, './fixtures/incoming/*.json')).forEach(function(file)
 {
   var name = path.basename(file, '.json');
 
@@ -68,6 +81,13 @@ glob.sync(path.join(__dirname, './fixtures/*.json')).forEach(function(file)
   {
     common.requests[name].expected = merge.call(mergeArrays, common.requests[name].body, common.requests[name]['+expected']);
   }
+});
+
+// load sending fixtures
+glob.sync(path.join(__dirname, './fixtures/outgoing/*.json')).forEach(function(file)
+{
+  var name = path.basename(file, '.json');
+  common.sendings[name] = require(file);
 });
 
 /**
@@ -101,7 +121,26 @@ function setupTests(fbbot, payloadType, subject, t, callback)
  */
 function iterateRequests(iterator)
 {
-  asynckit.serial(common.requests, iterator, function noop(err){ assert.ifError(err, 'expects to finish without errors'); });
+  asynckit.serial(common.requests, iterator, function noop(err){ assert.ifError(err, 'expects all requests to finish without errors'); });
+}
+
+/**
+ * Iterates over sendings asynchronously
+ *
+ * @param {function} iterator - iterator function
+ */
+function iterateSendings(iterator)
+{
+  asynckit.serial(common.sendings, function(item, type, callback)
+  {
+    // each item is an array by itself
+    asynckit.serial(item, function(test, id, cb)
+    {
+      // differentiate elements within same type
+      iterator(test, type + '-' + id, cb);
+    }, callback);
+
+  }, function noop(err){ assert.ifError(err, 'expects all sendings to finish without errors'); });
 }
 
 /**
@@ -141,4 +180,20 @@ function sendHandshake(type, callback)
   var query = qs.stringify(common.handshakes[type].query);
 
   request(url + '?' + query, callback);
+}
+
+/**
+ * Start API server with common port and augmented request handler
+ *
+ * @param   {function} handler - request handler
+ * @param   {function} callback - invoked after server has started
+ */
+function startApiServer(handler, callback)
+{
+  var server = http.createServer(agnostic(handler)).listen(common.api.port, function()
+  {
+    // supply endpoint to the consumer
+    var tailoredOptions = util._extend(common.fbbot, {apiUrl: 'http://localhost:' + common.api.port + '/'});
+    callback(tailoredOptions, server.close.bind(server));
+  });
 }

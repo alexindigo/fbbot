@@ -1,0 +1,28 @@
+[
+  {
+    "arguments": {
+      "user": "10157033896470955",
+      "type": "VIDEO",
+      "data": "https://petersapparel.com/bin/clip.mp4"
+    },
+
+    "expected": {
+      "recipient": {
+        "id": "10157033896470955"
+      },
+      "message": {
+        "attachment": {
+          "type": "video",
+          "payload": {
+            "url": "https://petersapparel.com/bin/clip.mp4"
+          }
+        }
+      }
+    },
+
+    "response": {
+      "recipient_id": "10157033896470955",
+      "message_id": "mid.1456970488068:c34767dfe57ee6e339"
+    }
+  }
+]
