@@ -1,0 +1,17 @@
+[
+  {
+    "meta": {
+      "description": "Does not allow custom types"
+    },
+    "arguments": {
+      "user": "10157033896470455",
+      "type": "NON_EXISTENT",
+      "data": {
+        "this": "is",
+        "non-existent": "type"
+      }
+    },
+
+    "error": "Unable to generate message from type NON_EXISTENT"
+  }
+]

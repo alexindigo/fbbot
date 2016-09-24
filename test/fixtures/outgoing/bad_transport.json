@@ -1,0 +1,17 @@
+[
+  {
+    "meta": {
+      "description": "Handles bad transport"
+    },
+    "endpoint": "http://localhost:25/",
+    "arguments": {
+      "user": "10157033896470455",
+      "type": "MESSAGE",
+      "data": {
+        "text": "Should go nowhere"
+      }
+    },
+
+    "error": "connect ECONNREFUSED 127.0.0.1:25"
+  }
+]

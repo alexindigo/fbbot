@@ -21,6 +21,7 @@ util.inherits(Fbbot, events.EventEmitter);
 Fbbot.defaults = {
   bodyMaxLength: '1mb',
   bodyEncoding : 'utf8',
+  timeout      : 5000,
   apiUrl       : 'https://graph.facebook.com/v2.6/me/messages?access_token='
 };
 

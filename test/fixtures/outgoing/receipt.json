@@ -1,0 +1,624 @@
+[
+  {
+    "arguments": {
+      "user": "10157033896471055",
+      "type": "RECEIPT",
+      "data": {
+        "template_type": "receipt",
+        "recipient_name": "Stephane Crozatier",
+        "order_number": "12345678902",
+        "currency": "USD",
+        "payment_method": "Visa 2345",
+        "order_url": "http://petersapparel.parseapp.com/order?order_id=123456",
+        "timestamp": "1428444852",
+        "elements": [{
+          "title": "Classic White T-Shirt",
+          "subtitle": "100% Soft and Luxurious Cotton",
+          "quantity": 2,
+          "price": 50,
+          "currency": "USD",
+          "image_url": "http://petersapparel.parseapp.com/img/whiteshirt.png"
+        }, {
+          "title": "Classic Gray T-Shirt",
+          "subtitle": "100% Soft and Luxurious Cotton",
+          "quantity": 1,
+          "price": 25,
+          "currency": "USD",
+          "image_url": "http://petersapparel.parseapp.com/img/grayshirt.png"
+        }],
+        "address": {
+          "street_1": "1 Hacker Way",
+          "street_2": "",
+          "city": "Menlo Park",
+          "postal_code": "94025",
+          "state": "CA",
+          "country": "US"
+        },
+        "summary": {
+          "subtotal": 75.00,
+          "shipping_cost": 4.95,
+          "total_tax": 6.19,
+          "total_cost": 56.14
+        },
+        "adjustments": [{
+          "name": "New Customer Discount",
+          "amount": 20
+        }, {
+          "name": "$10 Off Coupon",
+          "amount": 10
+        }]
+      }
+    },
+
+    "expected": {
+      "recipient": {
+        "id": "10157033896471055"
+      },
+      "message": {
+        "attachment": {
+          "type": "template",
+          "payload": {
+            "template_type": "receipt",
+            "recipient_name": "Stephane Crozatier",
+            "order_number": "12345678902",
+            "currency": "USD",
+            "payment_method": "Visa 2345",
+            "order_url": "http://petersapparel.parseapp.com/order?order_id=123456",
+            "timestamp": "1428444852",
+            "elements": [{
+              "title": "Classic White T-Shirt",
+              "subtitle": "100% Soft and Luxurious Cotton",
+              "quantity": 2,
+              "price": 50,
+              "currency": "USD",
+              "image_url": "http://petersapparel.parseapp.com/img/whiteshirt.png"
+            }, {
+              "title": "Classic Gray T-Shirt",
+              "subtitle": "100% Soft and Luxurious Cotton",
+              "quantity": 1,
+              "price": 25,
+              "currency": "USD",
+              "image_url": "http://petersapparel.parseapp.com/img/grayshirt.png"
+            }],
+            "address": {
+              "street_1": "1 Hacker Way",
+              "street_2": "",
+              "city": "Menlo Park",
+              "postal_code": "94025",
+              "state": "CA",
+              "country": "US"
+            },
+            "summary": {
+              "subtotal": 75.00,
+              "shipping_cost": 4.95,
+              "total_tax": 6.19,
+              "total_cost": 56.14
+            },
+            "adjustments": [{
+              "name": "New Customer Discount",
+              "amount": 20
+            }, {
+              "name": "$10 Off Coupon",
+              "amount": 10
+            }]
+          }
+        }
+      }
+    },
+
+    "response": {
+      "recipient_id": "10157033896471055",
+      "message_id": "mid.1456970488158:c34767dfe57ee6e339"
+    }
+  },
+
+  {
+    "meta": {
+      "description": "It should truncate extra elements"
+    },
+    "arguments": {
+      "user": "10157033896471155",
+      "type": "RECEIPT",
+      "data": {
+        "template_type": "receipt",
+        "recipient_name": "Stephane Crozatier",
+        "order_number": "12345678902",
+        "currency": "USD",
+        "payment_method": "Visa 2345",
+        "order_url": "http://petersapparel.parseapp.com/order?order_id=123456",
+        "timestamp": "1428444852",
+        "elements": [{
+          "title": "1"
+        }, {
+          "title": "2"
+        }, {
+          "title": "3"
+        }, {
+          "title": "4"
+        }, {
+          "title": "5"
+        }, {
+          "title": "6"
+        }, {
+          "title": "7"
+        }, {
+          "title": "8"
+        }, {
+          "title": "9"
+        }, {
+          "title": "10"
+        }, {
+          "title": "11"
+        }, {
+          "title": "12"
+        }, {
+          "title": "13"
+        }, {
+          "title": "14"
+        }, {
+          "title": "15"
+        }, {
+          "title": "16"
+        }, {
+          "title": "17"
+        }, {
+          "title": "18"
+        }, {
+          "title": "19"
+        }, {
+          "title": "20"
+        }, {
+          "title": "21"
+        }, {
+          "title": "22"
+        }, {
+          "title": "23"
+        }, {
+          "title": "24"
+        }, {
+          "title": "25"
+        }, {
+          "title": "26"
+        }, {
+          "title": "27"
+        }, {
+          "title": "28"
+        }, {
+          "title": "29"
+        }, {
+          "title": "30"
+        }, {
+          "title": "31"
+        }, {
+          "title": "32"
+        }, {
+          "title": "33"
+        }, {
+          "title": "34"
+        }, {
+          "title": "35"
+        }, {
+          "title": "36"
+        }, {
+          "title": "37"
+        }, {
+          "title": "38"
+        }, {
+          "title": "39"
+        }, {
+          "title": "40"
+        }, {
+          "title": "41"
+        }, {
+          "title": "42"
+        }, {
+          "title": "43"
+        }, {
+          "title": "44"
+        }, {
+          "title": "45"
+        }, {
+          "title": "46"
+        }, {
+          "title": "47"
+        }, {
+          "title": "48"
+        }, {
+          "title": "49"
+        }, {
+          "title": "50"
+        }, {
+          "title": "51"
+        }, {
+          "title": "52"
+        }, {
+          "title": "53"
+        }, {
+          "title": "54"
+        }, {
+          "title": "55"
+        }, {
+          "title": "56"
+        }, {
+          "title": "57"
+        }, {
+          "title": "58"
+        }, {
+          "title": "59"
+        }, {
+          "title": "60"
+        }, {
+          "title": "61"
+        }, {
+          "title": "62"
+        }, {
+          "title": "63"
+        }, {
+          "title": "64"
+        }, {
+          "title": "65"
+        }, {
+          "title": "66"
+        }, {
+          "title": "67"
+        }, {
+          "title": "68"
+        }, {
+          "title": "69"
+        }, {
+          "title": "70"
+        }, {
+          "title": "71"
+        }, {
+          "title": "72"
+        }, {
+          "title": "73"
+        }, {
+          "title": "74"
+        }, {
+          "title": "75"
+        }, {
+          "title": "76"
+        }, {
+          "title": "77"
+        }, {
+          "title": "78"
+        }, {
+          "title": "79"
+        }, {
+          "title": "80"
+        }, {
+          "title": "81"
+        }, {
+          "title": "82"
+        }, {
+          "title": "83"
+        }, {
+          "title": "84"
+        }, {
+          "title": "85"
+        }, {
+          "title": "86"
+        }, {
+          "title": "87"
+        }, {
+          "title": "88"
+        }, {
+          "title": "89"
+        }, {
+          "title": "90"
+        }, {
+          "title": "91"
+        }, {
+          "title": "92"
+        }, {
+          "title": "93"
+        }, {
+          "title": "94"
+        }, {
+          "title": "95"
+        }, {
+          "title": "96"
+        }, {
+          "title": "97"
+        }, {
+          "title": "98"
+        }, {
+          "title": "99"
+        }, {
+          "title": "100"
+        }, {
+          "title": "101"
+        }, {
+          "title": "102"
+        }, {
+          "title": "103"
+        }, {
+          "title": "104"
+        }, {
+          "title": "105"
+        }, {
+          "title": "106"
+        }, {
+          "title": "107"
+        }, {
+          "title": "107"
+        }, {
+          "title": "108"
+        }, {
+          "title": "109"
+        }, {
+          "title": "110"
+        }],
+        "address": {
+          "street_1": "1 Hacker Way",
+          "street_2": "",
+          "city": "Menlo Park",
+          "postal_code": "94025",
+          "state": "CA",
+          "country": "US"
+        },
+        "summary": {
+          "subtotal": 75.00,
+          "shipping_cost": 4.95,
+          "total_tax": 6.19,
+          "total_cost": 56.14
+        },
+        "adjustments": [{
+          "name": "New Customer Discount",
+          "amount": 20
+        }, {
+          "name": "$10 Off Coupon",
+          "amount": 10
+        }]
+      }
+    },
+
+    "expected": {
+      "recipient": {
+        "id": "10157033896471155"
+      },
+      "message": {
+        "attachment": {
+          "type": "template",
+          "payload": {
+            "template_type": "receipt",
+            "recipient_name": "Stephane Crozatier",
+            "order_number": "12345678902",
+            "currency": "USD",
+            "payment_method": "Visa 2345",
+            "order_url": "http://petersapparel.parseapp.com/order?order_id=123456",
+            "timestamp": "1428444852",
+            "elements": [{
+              "title": "1"
+            }, {
+              "title": "2"
+            }, {
+              "title": "3"
+            }, {
+              "title": "4"
+            }, {
+              "title": "5"
+            }, {
+              "title": "6"
+            }, {
+              "title": "7"
+            }, {
+              "title": "8"
+            }, {
+              "title": "9"
+            }, {
+              "title": "10"
+            }, {
+              "title": "11"
+            }, {
+              "title": "12"
+            }, {
+              "title": "13"
+            }, {
+              "title": "14"
+            }, {
+              "title": "15"
+            }, {
+              "title": "16"
+            }, {
+              "title": "17"
+            }, {
+              "title": "18"
+            }, {
+              "title": "19"
+            }, {
+              "title": "20"
+            }, {
+              "title": "21"
+            }, {
+              "title": "22"
+            }, {
+              "title": "23"
+            }, {
+              "title": "24"
+            }, {
+              "title": "25"
+            }, {
+              "title": "26"
+            }, {
+              "title": "27"
+            }, {
+              "title": "28"
+            }, {
+              "title": "29"
+            }, {
+              "title": "30"
+            }, {
+              "title": "31"
+            }, {
+              "title": "32"
+            }, {
+              "title": "33"
+            }, {
+              "title": "34"
+            }, {
+              "title": "35"
+            }, {
+              "title": "36"
+            }, {
+              "title": "37"
+            }, {
+              "title": "38"
+            }, {
+              "title": "39"
+            }, {
+              "title": "40"
+            }, {
+              "title": "41"
+            }, {
+              "title": "42"
+            }, {
+              "title": "43"
+            }, {
+              "title": "44"
+            }, {
+              "title": "45"
+            }, {
+              "title": "46"
+            }, {
+              "title": "47"
+            }, {
+              "title": "48"
+            }, {
+              "title": "49"
+            }, {
+              "title": "50"
+            }, {
+              "title": "51"
+            }, {
+              "title": "52"
+            }, {
+              "title": "53"
+            }, {
+              "title": "54"
+            }, {
+              "title": "55"
+            }, {
+              "title": "56"
+            }, {
+              "title": "57"
+            }, {
+              "title": "58"
+            }, {
+              "title": "59"
+            }, {
+              "title": "60"
+            }, {
+              "title": "61"
+            }, {
+              "title": "62"
+            }, {
+              "title": "63"
+            }, {
+              "title": "64"
+            }, {
+              "title": "65"
+            }, {
+              "title": "66"
+            }, {
+              "title": "67"
+            }, {
+              "title": "68"
+            }, {
+              "title": "69"
+            }, {
+              "title": "70"
+            }, {
+              "title": "71"
+            }, {
+              "title": "72"
+            }, {
+              "title": "73"
+            }, {
+              "title": "74"
+            }, {
+              "title": "75"
+            }, {
+              "title": "76"
+            }, {
+              "title": "77"
+            }, {
+              "title": "78"
+            }, {
+              "title": "79"
+            }, {
+              "title": "80"
+            }, {
+              "title": "81"
+            }, {
+              "title": "82"
+            }, {
+              "title": "83"
+            }, {
+              "title": "84"
+            }, {
+              "title": "85"
+            }, {
+              "title": "86"
+            }, {
+              "title": "87"
+            }, {
+              "title": "88"
+            }, {
+              "title": "89"
+            }, {
+              "title": "90"
+            }, {
+              "title": "91"
+            }, {
+              "title": "92"
+            }, {
+              "title": "93"
+            }, {
+              "title": "94"
+            }, {
+              "title": "95"
+            }, {
+              "title": "96"
+            }, {
+              "title": "97"
+            }, {
+              "title": "98"
+            }, {
+              "title": "99"
+            }, {
+              "title": "100"
+            }],
+            "address": {
+              "street_1": "1 Hacker Way",
+              "street_2": "",
+              "city": "Menlo Park",
+              "postal_code": "94025",
+              "state": "CA",
+              "country": "US"
+            },
+            "summary": {
+              "subtotal": 75.00,
+              "shipping_cost": 4.95,
+              "total_tax": 6.19,
+              "total_cost": 56.14
+            },
+            "adjustments": [{
+              "name": "New Customer Discount",
+              "amount": 20
+            }, {
+              "name": "$10 Off Coupon",
+              "amount": 10
+            }]
+          }
+        }
+      }
+    },
+
+    "response": {
+      "recipient_id": "10157033896471155",
+      "message_id": "mid.1456970488158:c34767dfe57ee6e339"
+    }
+  }
+]

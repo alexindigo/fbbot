@@ -1,0 +1,308 @@
+[
+  {
+    "arguments": {
+      "user": "10157033896470855",
+      "type": "GENERIC",
+      "data": [{
+        "title": "Welcome to Peter's Hats",
+        "item_url": "https://petersfancybrownhats.com",
+        "image_url": "https://petersfancybrownhats.com/company_image.png",
+        "subtitle": "We've got the right hat for everyone.",
+        "buttons": [{
+          "type": "web_url",
+          "url": "https://petersfancybrownhats.com",
+          "title": "View Website"
+        }, {
+          "type": "postback",
+          "title": "Start Chatting",
+          "payload": "DEVELOPER_DEFINED_PAYLOAD"
+        }]
+      }]
+    },
+
+    "expected": {
+      "recipient": {
+        "id": "10157033896470855"
+      },
+      "message": {
+        "attachment": {
+          "type": "template",
+          "payload": {
+            "template_type": "generic",
+            "elements": [{
+              "title": "Welcome to Peter's Hats",
+              "item_url": "https://petersfancybrownhats.com",
+              "image_url": "https://petersfancybrownhats.com/company_image.png",
+              "subtitle": "We've got the right hat for everyone.",
+              "buttons": [{
+                "type": "web_url",
+                "url": "https://petersfancybrownhats.com",
+                "title": "View Website"
+              }, {
+                "type": "postback",
+                "title": "Start Chatting",
+                "payload": "DEVELOPER_DEFINED_PAYLOAD"
+              }]
+            }]
+          }
+        }
+      }
+    },
+
+    "response": {
+      "recipient_id": "10157033896470855",
+      "message_id": "mid.1456970488058:c34767dfe57ee6e339"
+    }
+  },
+
+  {
+    "meta": {
+      "description": "It should truncate extra cards"
+    },
+    "arguments": {
+      "user": "10157033896470855",
+      "type": "GENERIC",
+      "data": [{
+        "title": "#1",
+        "item_url": "https://first.com",
+        "image_url": "https://first.com/one.png",
+        "subtitle": "Number one",
+        "buttons": [{
+          "type": "web_url",
+          "url": "https://first.com",
+          "title": "#1"
+        }]
+      }, {
+        "title": "#2",
+        "item_url": "https://second.com",
+        "image_url": "https://second.com/two.png",
+        "subtitle": "Number two",
+        "buttons": [{
+          "type": "web_url",
+          "url": "https://second.com",
+          "title": "#2"
+        }]
+      }, {
+        "title": "#3",
+        "item_url": "https://third.com",
+        "image_url": "https://third.com/three.png",
+        "subtitle": "Number three",
+        "buttons": [{
+          "type": "web_url",
+          "url": "https://third.com",
+          "title": "#3"
+        }]
+      }, {
+        "title": "#4",
+        "item_url": "https://fourth.com",
+        "image_url": "https://fourth.com/four.png",
+        "subtitle": "Number four",
+        "buttons": [{
+          "type": "web_url",
+          "url": "https://fourth.com",
+          "title": "#4"
+        }]
+      }, {
+        "title": "#5",
+        "item_url": "https://fifth.com",
+        "image_url": "https://fifth.com/five.png",
+        "subtitle": "Number five",
+        "buttons": [{
+          "type": "web_url",
+          "url": "https://fifth.com",
+          "title": "#5"
+        }]
+      }, {
+        "title": "#6",
+        "item_url": "https://sixth.com",
+        "image_url": "https://sixth.com/six.png",
+        "subtitle": "Number six",
+        "buttons": [{
+          "type": "web_url",
+          "url": "https://sixth.com",
+          "title": "#6"
+        }]
+      }, {
+        "title": "#7",
+        "item_url": "https://seventh.com",
+        "image_url": "https://seventh.com/seven.png",
+        "subtitle": "Number seven",
+        "buttons": [{
+          "type": "web_url",
+          "url": "https://seventh.com",
+          "title": "#7"
+        }]
+      }, {
+        "title": "#8",
+        "item_url": "https://eighth.com",
+        "image_url": "https://eighth.com/eight.png",
+        "subtitle": "Number eight",
+        "buttons": [{
+          "type": "web_url",
+          "url": "https://eighth.com",
+          "title": "#8"
+        }]
+      }, {
+        "title": "#9",
+        "item_url": "https://nineth.com",
+        "image_url": "https://nineth.com/nine.png",
+        "subtitle": "Number nine",
+        "buttons": [{
+          "type": "web_url",
+          "url": "https://nineth.com",
+          "title": "#9"
+        }]
+      }, {
+        "title": "#10",
+        "item_url": "https://tenth.com",
+        "image_url": "https://tenth.com/ten.png",
+        "subtitle": "Number ten",
+        "buttons": [{
+          "type": "web_url",
+          "url": "https://tenth.com",
+          "title": "#10"
+        }]
+      }, {
+        "title": "#11",
+        "item_url": "https://eleventh.com",
+        "image_url": "https://eleventh.com/eleven.png",
+        "subtitle": "Number eleven",
+        "buttons": [{
+          "type": "web_url",
+          "url": "https://eleventh.com",
+          "title": "#11"
+        }]
+      }, {
+        "title": "#12",
+        "item_url": "https://twelveth.com",
+        "image_url": "https://twelveth.com/twelve.png",
+        "subtitle": "Number twelve",
+        "buttons": [{
+          "type": "web_url",
+          "url": "https://twelveth.com",
+          "title": "#12"
+        }]
+      }]
+    },
+
+    "expected": {
+      "recipient": {
+        "id": "10157033896470855"
+      },
+      "message": {
+        "attachment": {
+          "type": "template",
+          "payload": {
+            "template_type": "generic",
+            "elements": [{
+              "title": "#1",
+              "item_url": "https://first.com",
+              "image_url": "https://first.com/one.png",
+              "subtitle": "Number one",
+              "buttons": [{
+                "type": "web_url",
+                "url": "https://first.com",
+                "title": "#1"
+              }]
+            }, {
+              "title": "#2",
+              "item_url": "https://second.com",
+              "image_url": "https://second.com/two.png",
+              "subtitle": "Number two",
+              "buttons": [{
+                "type": "web_url",
+                "url": "https://second.com",
+                "title": "#2"
+              }]
+            }, {
+              "title": "#3",
+              "item_url": "https://third.com",
+              "image_url": "https://third.com/three.png",
+              "subtitle": "Number three",
+              "buttons": [{
+                "type": "web_url",
+                "url": "https://third.com",
+                "title": "#3"
+              }]
+            }, {
+              "title": "#4",
+              "item_url": "https://fourth.com",
+              "image_url": "https://fourth.com/four.png",
+              "subtitle": "Number four",
+              "buttons": [{
+                "type": "web_url",
+                "url": "https://fourth.com",
+                "title": "#4"
+              }]
+            }, {
+              "title": "#5",
+              "item_url": "https://fifth.com",
+              "image_url": "https://fifth.com/five.png",
+              "subtitle": "Number five",
+              "buttons": [{
+                "type": "web_url",
+                "url": "https://fifth.com",
+                "title": "#5"
+              }]
+            }, {
+              "title": "#6",
+              "item_url": "https://sixth.com",
+              "image_url": "https://sixth.com/six.png",
+              "subtitle": "Number six",
+              "buttons": [{
+                "type": "web_url",
+                "url": "https://sixth.com",
+                "title": "#6"
+              }]
+            }, {
+              "title": "#7",
+              "item_url": "https://seventh.com",
+              "image_url": "https://seventh.com/seven.png",
+              "subtitle": "Number seven",
+              "buttons": [{
+                "type": "web_url",
+                "url": "https://seventh.com",
+                "title": "#7"
+              }]
+            }, {
+              "title": "#8",
+              "item_url": "https://eighth.com",
+              "image_url": "https://eighth.com/eight.png",
+              "subtitle": "Number eight",
+              "buttons": [{
+                "type": "web_url",
+                "url": "https://eighth.com",
+                "title": "#8"
+              }]
+            }, {
+              "title": "#9",
+              "item_url": "https://nineth.com",
+              "image_url": "https://nineth.com/nine.png",
+              "subtitle": "Number nine",
+              "buttons": [{
+                "type": "web_url",
+                "url": "https://nineth.com",
+                "title": "#9"
+              }]
+            }, {
+              "title": "#10",
+              "item_url": "https://tenth.com",
+              "image_url": "https://tenth.com/ten.png",
+              "subtitle": "Number ten",
+              "buttons": [{
+                "type": "web_url",
+                "url": "https://tenth.com",
+                "title": "#10"
+              }]
+            }]
+          }
+        }
+      }
+    },
+
+    "response": {
+      "recipient_id": "10157033896470855",
+      "message_id": "mid.1456970488058:c34767dfe57ee6e339"
+    }
+  }
+]

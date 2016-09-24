@@ -34,8 +34,16 @@ common.iterateSendings(function(sending, handle, callback)
     function(fbbotOptions, done)
     {
       var args  = []
-        , fbbot = new Fbbot(fbbotOptions)
+        , fbbot
         ;
+
+      // custom per test endpoint
+      if (sending.endpoint)
+      {
+        fbbotOptions.apiUrl = sending.endpoint;
+      }
+
+      fbbot = new Fbbot(fbbotOptions);
 
       t.equal(fbbot.options.apiUrl, fbbotOptions.apiUrl + fbbotOptions.pageAccessToken, 'respect custom apiUrl and augment it with correct token');
 
@@ -46,7 +54,7 @@ common.iterateSendings(function(sending, handle, callback)
 
       if (sending.arguments.type)
       {
-        args.push(fbbot[sending.arguments.type]); // e.g. fbbot['MARK_SEEN']
+        args.push(fbbot[sending.arguments.type] || sending.arguments.type); // e.g. fbbot['MARK_SEEN'] or 'custom_thing'
       }
 
       if (sending.arguments.data)
@@ -56,7 +64,16 @@ common.iterateSendings(function(sending, handle, callback)
 
       fbbot.send.apply(fbbot, args.concat(function(error, result)
       {
-        t.error(error, 'should result in no error');
+        if (sending.error)
+        {
+          t.equal(error.message, sending.error, 'expect to error with message: ' + sending.error);
+          t.equal(error.name, 'Error', 'expect regular error object');
+        }
+        else
+        {
+          t.error(error, 'should result in no error');
+        }
+
         t.deepEqual(result, sending.response, 'expect to pass response all the way through');
 
         done(callback);

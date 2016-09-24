@@ -20,7 +20,7 @@
   {
     "arguments": {
       "user": {
-        "id": "10157033896470464",
+        "phone_number": "1234567890",
         "unused": "field"
       },
       "type": "TYPING_OFF"
@@ -28,7 +28,7 @@
 
     "expected": {
       "recipient": {
-        "id": "10157033896470464"
+        "phone_number": "1234567890"
       },
       "sender_action": "typing_off"
     },

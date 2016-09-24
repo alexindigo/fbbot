@@ -299,10 +299,12 @@
 
   {
     "meta": {
-      "description": "Sending full message object with quick reply options"
+      "description": "Sending full message object with quick reply options, with phone number instead of id"
     },
     "arguments": {
-      "user": "10157033896470458",
+      "user": {
+        "phone_number": "12345678901"
+      },
       "type": "MESSAGE",
       "data": {
         "text": "Pick a color:",
@@ -320,7 +322,7 @@
 
     "expected": {
       "recipient": {
-      	"id": "10157033896470458"
+      	"phone_number": "12345678901"
       },
       "message": {
         "text": "Pick a color:",

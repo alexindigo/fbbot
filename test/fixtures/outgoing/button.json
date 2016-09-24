@@ -1,0 +1,111 @@
+[
+  {
+    "arguments": {
+      "user": "10157033896470955",
+      "type": "BUTTON",
+      "data": {
+        "text": "What do you want to do next?",
+        "buttons": [{
+          "type": "web_url",
+          "url": "https://petersapparel.parseapp.com",
+          "title": "Show Website"
+        }, {
+          "type": "postback",
+          "title": "Start Chatting",
+          "payload": "USER_DEFINED_PAYLOAD"
+        }]
+      }
+    },
+
+    "expected": {
+      "recipient": {
+        "id": "10157033896470955"
+      },
+      "message": {
+        "attachment": {
+          "type": "template",
+          "payload": {
+            "template_type": "button",
+            "text": "What do you want to do next?",
+            "buttons": [{
+              "type": "web_url",
+              "url": "https://petersapparel.parseapp.com",
+              "title": "Show Website"
+            }, {
+              "type": "postback",
+              "title": "Start Chatting",
+              "payload": "USER_DEFINED_PAYLOAD"
+            }]
+          }
+        }
+      }
+    },
+
+    "response": {
+      "recipient_id": "10157033896470955",
+      "message_id": "mid.1456970488058:c34767dfe57ee6e339"
+    }
+  },
+
+  {
+    "arguments": {
+      "user": {
+        "id": "10157033896470956"
+      },
+      "type": "BUTTON",
+      "data": {
+        "text": "What do you want to do next?",
+        "buttons": [{
+          "type": "web_url",
+          "url": "https://first.parseapp.com",
+          "title": "Show First Website"
+        }, {
+          "type": "postback",
+          "title": "Second Chatting",
+          "payload": "USER_DEFINED_SECOND_PAYLOAD"
+        }, {
+          "type": "web_url",
+          "url": "https://third.parseapp.com",
+          "title": "Show Third Website"
+        }, {
+          "type": "postback",
+          "title": "Fourth Chatting",
+          "payload": "USER_DEFINED_FOURTH_PAYLOAD"
+        }]
+      }
+    },
+
+    "expected": {
+      "recipient": {
+        "id": "10157033896470956"
+      },
+      "message": {
+        "attachment": {
+          "type": "template",
+          "payload": {
+            "template_type": "button",
+            "text": "What do you want to do next?",
+            "buttons": [{
+              "type": "web_url",
+              "url": "https://first.parseapp.com",
+              "title": "Show First Website"
+            }, {
+              "type": "postback",
+              "title": "Second Chatting",
+              "payload": "USER_DEFINED_SECOND_PAYLOAD"
+            }, {
+              "type": "web_url",
+              "url": "https://third.parseapp.com",
+              "title": "Show Third Website"
+            }]
+          }
+        }
+      }
+    },
+
+    "response": {
+      "recipient_id": "10157033896470956",
+      "message_id": "mid.1456970488058:c34767dfe57ee6e339"
+    }
+  }
+]
