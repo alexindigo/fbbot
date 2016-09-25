@@ -66,7 +66,7 @@ common.iterateSendings(function(sending, handle, callback)
       {
         if (sending.error)
         {
-          t.equal(error.message, sending.error, 'expect to error with message: ' + sending.error);
+          t.ok(error.message.match(sending.error), 'expect to error with message: ' + sending.error);
           t.equal(error.name, 'Error', 'expect regular error object');
         }
         else
