@@ -15,10 +15,11 @@ Minimal framework/SDK for facebook messenger bots. BYOS (Bring Your Own Server).
 [![restify](https://img.shields.io/badge/restify-tested-brightgreen.svg?style=flat)](http://restify.com)
 [![http](https://img.shields.io/badge/http-tested-brightgreen.svg?style=flat)](https://nodejs.org/api/http.html)
 
-## Work In Progress
+## Install
 
-- TODO: fetch user info middleware
-- TODO: initialization actions (welcome page, menu, white-listing, etc)
+```
+npm install --save fbbot
+```
 
 ## Examples
 
@@ -158,6 +159,13 @@ Fbbot.logger.output({
 });
 
 ```
+
+## TODO
+
+- support for `read` and `echo` notification
+- add `airline` templates
+- fetch user info middleware
+- initialization actions (welcome page, menu, white-listing, etc)
 
 ## License
 
