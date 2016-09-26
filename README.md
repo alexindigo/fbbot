@@ -33,6 +33,7 @@ var app = express();
 var fbbot = new Fbbot({token: '...', secret: '...'});
 
 // plug-in fbbot
+// It will also listen for GET requests to authorize fb app.
 app.all('/webhook', fbbot.requestHandler);
 // assuming HTTPS is terminated elsewhere,
 // or you can use standard express https capabilities
@@ -63,6 +64,83 @@ fbbot.on('postback', function(postback, send)
   // send <-- send method with baked in user.id `send(fbbot.<message_type>, <payload>, <callback>)`
 });
 ```
+
+### Adding middleware
+
+```javascript
+var express = require('express');
+var Fbbot = require('fbbot');
+
+var app = express();
+var fbbot = new Fbbot({token: '...', secret: '...'});
+
+// plug-in fbbot
+app.all('/webhook', fbbot.requestHandler);
+// assuming HTTPS is terminated elsewhere,
+// or you can use standard express https capabilities
+app.listen(8080);
+
+fbbot.use('message', function(payload, callback)
+{
+  // do something with the payload, async or sync
+  setTimeout(function()
+  {
+    payload.fooWasHere = true;
+    // pass it to callback
+    callback(null, payload);
+  }, 500);
+});
+
+// catching messages
+fbbot.on('message', function(message, send)
+{
+  // modified message payload
+  message.fooWasHere; // true
+});
+
+```
+
+More middleware examples could be found in [incoming](incoming/) folder.
+
+### Sending messages to user
+
+Here are two ways of sending messages, using per-instance fbbot.send method,
+or the one tailored to the user, provided to the event handlers.
+
+```javascript
+var express = require('express');
+var Fbbot = require('fbbot');
+
+var app = express();
+var fbbot = new Fbbot({token: '...', secret: '...'});
+
+// plug-in fbbot
+app.all('/webhook', fbbot.requestHandler);
+// assuming HTTPS is terminated elsewhere,
+// or you can use standard express https capabilities
+app.listen(8080);
+
+// "standalone" send function
+// send reguar text message
+fbbot.send(1234567890, fbbot.TEXT, 'Hi there!', function(error, response)
+{
+  // error <!-- message composition error or transport error
+  // response <-- response from the remote server
+});
+
+// sending messages as reply
+fbbot.on('message', function(message, send)
+{
+  // tailored to the user
+  // callback is optional
+  send(fbbot.IMAGE, 'https://petersapparel.com/img/shirt.png');
+
+  // also message type tailored methods are available
+  send.image('https://petersapparel.com/img/shirt.png');
+});
+```
+
+More details could be found in [test-send.js](test/test-send.js).
 
 Check out [test folder](test/fixtures) for available options.
 
