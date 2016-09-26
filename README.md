@@ -17,9 +17,8 @@ Minimal framework/SDK for facebook messenger bots. BYOS (Bring Your Own Server).
 
 ## Work In Progress
 
-- Missing send method (with templates)
-- Missing fetch user info middleware
-- Missing initialization actions (welcome page, menu, white-listing, etc)
+- TODO: fetch user info middleware
+- TODO: initialization actions (welcome page, menu, white-listing, etc)
 
 ## Examples
 
@@ -40,25 +39,28 @@ app.all('/webhook', fbbot.requestHandler);
 app.listen(8080);
 
 // catching messages
-fbbot.on('message', function(message)
+fbbot.on('message', function(message, send)
 {
   // message.type <-- type of the message (text, attachment, quick_reply, sticker, etc)
   // message.user <-- user object
   // message.text <-- text for text messages
   // message.attachments <-- list of attachments if available
+  // send <-- send method with baked in user.id `send(fbbot.<message_type>, <payload>, <callback>)`
 });
 
 // handle only text messages
-fbbot.on('message.text', function(message)
+fbbot.on('message.text', function(message, send)
 {
   // message.user <-- user object
   // message.text <-- text for text messages
+  // send <-- send method with baked in user.id `send(fbbot.<message_type>, <payload>, <callback>)`
 });
 
-fbbot.on('postback', function(postback)
+fbbot.on('postback', function(postback, send)
 {
   // postback.user <-- user object
   // postback.payload <-- parsed payload
+  // send <-- send method with baked in user.id `send(fbbot.<message_type>, <payload>, <callback>)`
 });
 ```
 

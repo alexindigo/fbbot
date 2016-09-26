@@ -37,9 +37,11 @@ function perRequest(fbbot, payloadType, request, t, callback)
   });
 
   // [payloadType] event
-  fbbot.on(payloadType, function(payload)
+  fbbot.on(payloadType, function(payload, send)
   {
     var expected = payloads[payloadType]['event'].shift();
+
+    t.equal(typeof send, 'function', 'expect send function for each message event');
 
     t.deepEquals(payload, expected[payloadType], 'event should receive ' + payloadType + ' object');
     t.deepEquals(payload.messaging, expected, payloadType + ' event object has reference to the parent object, as prototyte');

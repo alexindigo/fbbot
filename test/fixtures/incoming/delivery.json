@@ -29,7 +29,7 @@
 
   "+expected":
   {
-    "plan": 12,
+    "plan": 13,
     "entry": [{
       "messaging": [{
         "delivery": {

@@ -1,51 +1,47 @@
 var express = require('express')
-  , tape    = require('tape')
+  , test    = require('tape')
   , common  = require('./common.js')
   , Fbbot   = require('../')
   ;
 
-tape('express', function(test)
+common.iterateRequests(function(request, handle, callback)
 {
-  common.iterateRequests(function(request, handle, callback)
+  var payloadType = handle.split('-')[0];
+
+  test.test('express with ' + handle, function(t)
   {
-    var payloadType = handle.split('-')[0];
+    t.plan(request.expected.plan);
 
-    test.test('with ' + handle, function(t)
+    var server
+      , app   = express()
+      , fbbot = new Fbbot(common.fbbot)
+      ;
+
+    // setup tests per instance
+    common.setupTests(fbbot, payloadType, request, t, callback);
+
+    // plug-in fbbot
+    app.all(common.server.endpoint, fbbot.requestHandler);
+
+    // start the server
+    server = app.listen(common.server.port, function()
     {
-      t.plan(request.expected.plan);
-
-      var server
-        , app   = express()
-        , fbbot = new Fbbot(common.fbbot)
-        ;
-
-      // setup tests per instance
-      common.setupTests(fbbot, payloadType, request, t, callback);
-
-      // plug-in fbbot
-      app.all(common.server.endpoint, fbbot.requestHandler);
-
-      // start the server
-      server = app.listen(common.server.port, function()
+      common.sendRequest(handle, function(error, response)
       {
-        common.sendRequest(handle, function(error, response)
-        {
-          t.error(error, 'POST request should return no error');
-          t.equal(response.statusCode, 200, 'POST request should return code 200');
+        t.error(error, 'POST request should return no error');
+        t.equal(response.statusCode, 200, 'POST request should return code 200');
 
-          server.close(function()
-          {
-            t.ok(true, 'make sure server is closed');
-          });
+        server.close(function()
+        {
+          t.ok(true, 'make sure server is closed');
         });
       });
-
     });
-  });
 
+  });
 });
 
-tape('express - handshake - success', function(t)
+test('express - handshake - success', function(t)
 {
   t.plan(4);
 
@@ -74,7 +70,7 @@ tape('express - handshake - success', function(t)
   });
 });
 
-tape('express - handshake - failed', function(t)
+test('express - handshake - failed', function(t)
 {
   t.plan(4);
 

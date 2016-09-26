@@ -85,7 +85,7 @@
 
   "+expected":
   {
-    "plan": 45,
+    "plan": 50,
     "entry": [{
       "messaging": [{
         "message": {
