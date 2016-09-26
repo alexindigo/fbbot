@@ -1,17 +1,18 @@
-var util       = require('util')
-  , events     = require('events')
-  , bole       = require('bole')
-  , merge      = require('deeply')
-  , agnostic   = require('agnostic')
+var util          = require('util')
+  , events        = require('events')
+  , bole          = require('bole')
+  , merge         = require('deeply')
+  , agnostic      = require('agnostic')
   // , cache      = require('async-cache')
   // , stringify  = require('fast-safe-stringify')
-  , verify     = require('./lib/verify_endpoint.js')
-  , receive    = require('./lib/receive.js')
-  , send       = require('./lib/send.js')
-  , middleware = require('./lib/middleware.js')
-  , incoming   = require('./incoming/index.js')
-  , outgoing   = require('./outgoing/index.js')
-  , Traverse   = require('./traverse/index.js')
+  , verify        = require('./lib/verify_endpoint.js')
+  , send          = require('./lib/send.js')
+  , middleware    = require('./lib/middleware.js')
+  , inMiddleware  = require('./incoming/index.js')
+  , outMiddleware = require('./outgoing/index.js')
+  , Traverse      = require('./traverse/index.js')
+  , inTraverse    = require('./traverse/incoming.js')
+  , outTraverse   = require('./traverse/outgoing.js')
   ;
 
 module.exports = Fbbot;
@@ -43,8 +44,6 @@ util._extend(Fbbot.prototype, send.types);
 
 // no need to expose middleware handler as public api
 Fbbot.prototype._run = middleware.run;
-// processing entry point
-Fbbot.prototype._receive = receive;
 // verifies endpoint to facebook
 Fbbot.prototype._verifyEndpoint = verify;
 
@@ -59,9 +58,16 @@ function Fbbot(options)
 {
   if (!(this instanceof Fbbot)) return new Fbbot(options);
 
+  /**
+   * Custom options per instance
+   * @type {object}
+   */
   this.options = merge(Fbbot.defaults, options || {});
 
-  // creds
+  /**
+   * Store credentials
+   * @type {object}
+   */
   this.credentials =
   {
     // keep simple naming for internal reference
@@ -77,36 +83,56 @@ function Fbbot(options)
   // compose apiUrl
   this.options.apiUrl += this.credentials.token;
 
-  // expose logger
+  /**
+   * expose logger
+   * @type {object}
+   */
   this.logger = options.logger || bole(options.name || 'fbbot');
 
-  // middleware storage (per event)
-  this.stack = {};
+  /**
+   * middleware storage (per event)
+   * @type {object}
+   * @private
+   */
+  this._stack = {};
 
-  // lock-in public methods
-  // wrap `_handler` with agnostic to accommodate different http servers
+  /**
+   * lock-in public methods
+   * wrap `_handler` with agnostic to accommodate different http servers
+   * @type {function}
+   */
   this.requestHandler = agnostic(this._handler.bind(this));
 
   // attach lifecycle filters
-  incoming(this);
-  outgoing(this);
+  inMiddleware(this);
+  outMiddleware(this);
 
-  // receive: create traverse paths
-  this.incoming = new Traverse(receive.steps, {
+  /**
+   * create incoming traverse paths
+   * @type {Traverse}
+   * @private
+   */
+  this._incoming = new Traverse(inTraverse.steps, {
     entry     : middleware.entryPoint,
-    middleware: receive.middleware.bind(this),
-    emitter   : receive.emitter.bind(this)
+    middleware: inTraverse.middleware.bind(this),
+    emitter   : inTraverse.emitter.bind(this),
+    prefix    : inTraverse.prefix
   });
   // wrap linkParent method
-  this.incoming.linkParent = receive.linkParent.bind(receive, this.incoming.linkParent);
+  this._incoming.linkParent = inTraverse.linkParent.bind(null, this._incoming.linkParent);
 
-  // // send: create traverse paths
-  // this.outgoing = new Traverse(send.steps, {
-  //   middleware: send.middleware.bind(this),
-  //   emitter   : send.emitter.bind(this)
-  // });
-  // // wrap linkParent method
-  // this.incoming.linkParent = receive.linkParent.bind(receive, this.incoming.linkParent);
+  /**
+   * create outgoing traverse paths
+   * @type {Traverse}
+   * @private
+   */
+  this._outgoing = new Traverse(outTraverse.steps, {
+    middleware: outTraverse.middleware.bind(this),
+    emitter   : outTraverse.emitter.bind(this),
+    prefix    : outTraverse.prefix
+  });
+  // wrap linkParent method
+  this._outgoing.linkParent = outTraverse.linkParent.bind(null, this._outgoing.linkParent);
 }
 
 /**
@@ -132,7 +158,7 @@ Fbbot.prototype._handler = function(request, respond)
   // https://developers.facebook.com/docs/messenger-platform/webhook-reference#response
   respond(200);
 
-  this.incoming.traverse(request.body, function(err, payload)
+  this._incoming.traverse(request.body, function(err, payload)
   {
     this.emit('end', err, payload);
   }.bind(this));

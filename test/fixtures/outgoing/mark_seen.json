@@ -1,5 +1,7 @@
 [
   {
+    "expectedTests": -1,
+
     "arguments": {
       "user": "10157033896470455",
       "type": "MARK_SEEN"
@@ -18,6 +20,8 @@
   },
 
   {
+    "expectedTests": -1,
+
     "arguments": {
       "user": {
         "id": "10157033896470465",

@@ -33,6 +33,8 @@ function Traverse(steps, options)
 
   // custom entry point, otherwise empty string will be used
   this.entry = options.entry || '';
+  // allow prefixed handles
+  this.prefix = options.prefix || null;
 
   // if no middleware controller provided, just make it pass though untouched
   this.middleware = options.middleware || this.middlewarePassthru;
@@ -84,12 +86,12 @@ Traverse.prototype.traverse = function(branch, payload, callback)
   if (typeOf(payload) != 'object')
   {
     this.logger.error({message: 'payload is not an Object', branch: branch, payload: payload});
-    callback(new Error('payload <', branch, '> is not an Object'));
+    callback(new Error('payload <' + branch + '> is not an Object'));
     return;
   }
 
   // invoke middleware controller with custom context
-  this.middleware(branch, payload, function(error, resolvedPayload)
+  this.middleware(this.prefixedBranch(branch), payload, function(error, resolvedPayload)
   {
     var nextStep = this.steps[branch]
       , nextStepPayload
@@ -97,15 +99,15 @@ Traverse.prototype.traverse = function(branch, payload, callback)
 
     if (error)
     {
-      this.logger.error({message: 'middleware ran into an error', error: error, branch: branch, nextStep: nextStep, originalPayload: payload, resolvedPayload: resolvedPayload});
+      this.logger.error({message: 'middleware ran into an error', error: error, branch: branch, prefixed: this.prefixedBranch(branch), nextStep: nextStep, originalPayload: payload, resolvedPayload: resolvedPayload});
       callback(error, resolvedPayload);
       return;
     }
 
     if (typeOf(resolvedPayload) != 'object' && typeOf(resolvedPayload) != 'array')
     {
-      this.logger.error({message: 'payload after middleware is not an Object or an Array', branch: branch, nextStep: nextStep, payload: resolvedPayload});
-      callback(new Error('payload after <', branch, '> middleware is not an Object or an Array'));
+      this.logger.error({message: 'payload after middleware is not an Object or an Array', branch: branch, prefixed: this.prefixedBranch(branch), nextStep: nextStep, payload: resolvedPayload});
+      callback(new Error('payload after <' + branch + '> middleware is not an Object or an Array'));
       return;
     }
 
@@ -113,7 +115,7 @@ Traverse.prototype.traverse = function(branch, payload, callback)
 
     // done with all the error checks
     // notify listeners
-    this.emitter(branch, resolvedPayload);
+    this.emitter(this.prefixedBranch(branch), resolvedPayload);
 
     // conditional next step
     // this order allows for custom function to return array of possible next steps
@@ -130,8 +132,8 @@ Traverse.prototype.traverse = function(branch, payload, callback)
 
     if (!nextStep || !(nextStep in resolvedPayload))
     {
-      this.logger.debug({message: 'no further steps possible, stop right here', branch: branch, nextStep: nextStep, payload: resolvedPayload});
-      callback(null, payload);
+      this.logger.debug({message: 'no further steps possible, stop right here', branch: branch, prefixed: this.prefixedBranch(branch), nextStep: nextStep, payload: resolvedPayload});
+      callback(null, resolvedPayload);
       return;
     }
 
@@ -139,7 +141,18 @@ Traverse.prototype.traverse = function(branch, payload, callback)
     nextStepPayload = this.linkParent(branch, resolvedPayload, resolvedPayload[nextStep]);
 
     // do another round
-    this.traverse.call(this, nextStep, nextStepPayload, callback);
+    this.traverse.call(this, nextStep, nextStepPayload, function(err, nextStepResolvedPayload)
+    {
+      if (err)
+      {
+        callback(err, nextStepResolvedPayload);
+        return;
+      }
+
+      // re-construct original structure with updated data
+      resolvedPayload[nextStep] = nextStepResolvedPayload;
+      callback(null, resolvedPayload);
+    });
   }.bind(this));
 };
 
@@ -163,4 +176,15 @@ Traverse.prototype.linkParent = function(branch, parentPayload, nextPayload)
   nextPayload.__proto__ = parent;
 
   return nextPayload;
+};
+
+/**
+ * Resolves branch name with instance prefix
+ *
+ * @param   {string} branch - handle of the branch
+ * @returns {string} - reslved branch name
+ */
+Traverse.prototype.prefixedBranch = function(branch)
+{
+  return [this.prefix, branch].join('.').replace(/^\.+|\.+$/g, '');
 };

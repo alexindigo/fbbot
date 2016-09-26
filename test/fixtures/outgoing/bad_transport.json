@@ -3,6 +3,7 @@
     "meta": {
       "description": "Handles bad transport"
     },
+    "expectedTests": 1,
     "endpoint": "http://localhost:25/",
     "arguments": {
       "user": "10157033896470455",

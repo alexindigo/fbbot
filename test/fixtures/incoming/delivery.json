@@ -6,25 +6,25 @@
     "content-type": "application/json"
   },
   "body": {
-     "object": "page",
-     "entry": [{
-       "id": "514061682115264",
-       "time": 1469430649209,
-       "messaging": [{
-         "sender": {
-           "id": "10157033896470455"
-         },
-         "recipient": {
-           "id": "514061682115264"
-         },
-         "timestamp": 0,
-         "delivery": {
-           "mids": ["mid.1469430648815:928f626810676c5d05"],
-           "watermark": 1469430649039,
-           "seq": 2238
-         }
-       }]
-     }]
+    "object": "page",
+    "entry": [{
+      "id": "514061682115264",
+      "time": 1469430649209,
+      "messaging": [{
+        "sender": {
+          "id": "10157033896470455"
+        },
+        "recipient": {
+          "id": "514061682115264"
+        },
+        "timestamp": 0,
+        "delivery": {
+          "mids": ["mid.1469430648815:928f626810676c5d05"],
+          "watermark": 1469430649039,
+          "seq": 2238
+        }
+      }]
+    }]
   },
 
   "+expected":

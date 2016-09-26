@@ -24,10 +24,18 @@ common.iterateSendings(function(sending, handle, callback)
 
   test.test('send ' + handle + ' with ' + Object.keys(sending.arguments).join(', ') + ' arguments', function(t)
   {
-    t.plan(4);
+    // three checks for erroneous requests, and six checks for successful requests
+    // with addition or expected extra tests
+    t.plan((sending.error ? 3 : 6) + (sending.expectedTests || 0));
+
+    // Id takes over phone_humber
+    var expectedPhone = sending.arguments.user['phone_number']
+      , expectedId    = sending.arguments.user.id || (expectedPhone ? null : sending.arguments.user)
+      ;
 
     common.startApiServer(function(request, respond)
     {
+      t.equal(request.query.access_token, common.fbbot.pageAccessToken, 'should supply proper access token');
       t.deepEqual(request.body, sending.expected, 'expects to have proper payload for message type: ' + type);
       respond(sending.response);
     },
@@ -62,12 +70,24 @@ common.iterateSendings(function(sending, handle, callback)
         args.push(sending.arguments.data);
       }
 
+      // check events
+      fbbot.on('send.message', function(data)
+      {
+        if (expectedId)
+        {
+          t.equal(data.parent.recipient.id, expectedId, 'should have recipient id available via linked parent object');
+        }
+        else
+        {
+          t.equal(data.parent.recipient['phone_number'], expectedPhone, 'should have recipient phone_number available via linked parent object');
+        }
+      });
+
       fbbot.send.apply(fbbot, args.concat(function(error, result)
       {
         if (sending.error)
         {
           t.ok(error.message.match(sending.error), 'expect to error with message: ' + sending.error);
-          t.equal(error.name, 'Error', 'expect regular error object');
         }
         else
         {

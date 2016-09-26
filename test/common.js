@@ -193,7 +193,7 @@ function startApiServer(handler, callback)
   var server = http.createServer(agnostic(handler)).listen(common.api.port, function()
   {
     // supply endpoint to the consumer
-    var tailoredOptions = util._extend(common.fbbot, {apiUrl: 'http://localhost:' + common.api.port + '/'});
+    var tailoredOptions = util._extend(common.fbbot, {apiUrl: 'http://localhost:' + common.api.port + '/?access_token='});
     callback(tailoredOptions, server.close.bind(server));
   });
 }

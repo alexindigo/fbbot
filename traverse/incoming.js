@@ -1,5 +1,5 @@
-var messaging = require('./messaging.js')
-  , normalize = require('./normalize.js')
+var messaging = require('../lib/messaging.js')
+  , normalize = require('../lib/normalize.js')
   ;
 
 module.exports = {
@@ -35,7 +35,11 @@ function linkParent(original, branch, parentPayload, nextPayload)
   var result = original(branch, parentPayload, nextPayload);
 
   // add normalized handle reference
-  result.__proto__[normalized] = parentPayload;
+  // skip if it's empty string
+  if (normalized)
+  {
+    result.__proto__[normalized] = parentPayload;
+  }
 
   // add user object reference
   if (parentPayload.user)
@@ -47,7 +51,7 @@ function linkParent(original, branch, parentPayload, nextPayload)
 }
 
 /**
- * Traverse middleware for receiving flow
+ * Traverse middleware for incoming flow
  *
  * @this  Fbbot#
  * @param {string} branch - branch name of the payload
@@ -91,7 +95,7 @@ function middleware(branch, payload, callback)
 function emitter(event, payload)
 {
   // get proper name
-  var normalized = normalize(event);
+  var normalizeType, normalized = normalize(event);
 
   // notify listeners
   this.emit(normalized, payload, (payload.user || {}).send);
@@ -99,6 +103,7 @@ function emitter(event, payload)
   // notify listeners of the specific type
   if (payload.type)
   {
-    this.emit([normalized, payload.type].join('.'), payload, (payload.user || {}).send);
+    normalizeType = normalize(payload.type);
+    this.emit([normalized, normalizeType].join('.'), payload, (payload.user || {}).send);
   }
 }
