@@ -81,7 +81,7 @@ Traverse.prototype.traverse = function(branch, payload, callback)
     return;
   }
 
-  this.logger.debug({message: 'TBW something about raw payload'});
+  this.logger.debug({message: 'Traversing payload under branch handle', branch: branch, payload: payload});
 
   if (typeOf(payload) != 'object')
   {
@@ -111,7 +111,7 @@ Traverse.prototype.traverse = function(branch, payload, callback)
       return;
     }
 
-    this.logger.info({message: 'TBW - all middleware are ok'});
+    this.logger.info({message: 'Successfully executed all middleware for current branch', branch: branch, prefixed: this.prefixedBranch(branch), payload: resolvedPayload});
 
     // done with all the error checks
     // notify listeners

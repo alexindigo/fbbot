@@ -56,7 +56,7 @@ function middleware(branch, payload, callback)
   // get proper name
   var normalized = normalize(branch);
 
-  this.logger.debug({message: 'TBW something about raw payload', branch: branch, normalized: normalized, payload: payload});
+  this.logger.debug({message: 'Running middleware for outgoing payload', branch: branch, normalized: normalized, payload: payload});
 
   // add branch reference to the parent object
 
