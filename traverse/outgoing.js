@@ -7,7 +7,8 @@ module.exports = {
     ''           : 'message',
     'message'    : ['attachment', 'quick_replies'],
     'attachment' : 'payload',
-    'payload'    : 'elements'
+    'payload'    : ['buttons', 'elements'],
+    'elements'   : 'buttons'
   },
 
   linkParent: linkParent,

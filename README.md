@@ -2,6 +2,8 @@
 
 Minimal framework/SDK for facebook messenger bots. BYOS (Bring Your Own Server).
 
+[![patform@1.2](https://img.shields.io/badge/messenger_platform-v1.2-brightgreen.svg?style=flat)](https://developers.facebook.com/docs/messenger-platform)
+
 [![Linux Build](https://img.shields.io/travis/alexindigo/fbbot/master.svg?label=linux:0.12-6.x&style=flat)](https://travis-ci.org/alexindigo/fbbot)
 [![MacOS Build](https://img.shields.io/travis/alexindigo/fbbot/master.svg?label=macos:0.12-6.x&style=flat)](https://travis-ci.org/alexindigo/fbbot)
 [![Windows Build](https://img.shields.io/appveyor/ci/alexindigo/fbbot/master.svg?label=windows:0.12-6.x&style=flat)](https://ci.appveyor.com/project/alexindigo/fbbot)
@@ -20,6 +22,28 @@ Minimal framework/SDK for facebook messenger bots. BYOS (Bring Your Own Server).
 ```
 npm install --save fbbot
 ```
+
+## Table of Contents
+
+<!-- TOC -->
+- [Examples](#examples)
+  - [Listening for messages](#listening-for-messages)
+  - [Adding middleware](#adding-middleware)
+  - [Sending messages to user](#sending-messages-to-user)
+  - [Logging](#logging)
+- [API](#api)
+  - [Fbbot#use](#fbbotuse)
+  - [Fbbot#on](#fbboton)
+  - [Fbbot#send](#fbbotsend)
+    - [Convenience Methods](#convenience-methods)
+  - [Message Types](#message-types)
+  - [Hooks](#hooks)
+    - [Incoming](#incoming)
+    - [Outgoing](#outgoing)
+- [TODO](#todo)
+- [License](#license)
+
+<!-- TOC END -->
 
 ## Examples
 
@@ -65,6 +89,8 @@ fbbot.on('postback', function(postback, send)
   // send <-- send method with baked in user.id `send(fbbot.<message_type>, <payload>, <callback>)`
 });
 ```
+
+Check out [test folder](test/fixtures) for available options.
 
 ### Adding middleware
 
@@ -143,8 +169,6 @@ fbbot.on('message', function(message, send)
 
 More details could be found in [test-send.js](test/test-send.js).
 
-Check out [test folder](test/fixtures) for available options.
-
 ### Logging
 
 ```javascript
@@ -160,8 +184,152 @@ Fbbot.logger.output({
 
 ```
 
+## API
+
+### Fbbot#use
+
+Adds middleware for both incoming and outgoing flows. Outgoing hooks prefixed with `send`. Each middleware handler function expected to invoke callback with payload object, modified or not.
+
+```javascript
+fbbot.use([String hook ,] Function handler)
+```
+
+If no `hook` specified, provided function will be applied to entire incoming payload.
+
+- `hook`: *(optional)* hook handle to attach middleware handler to.
+- `handler`: middleware handler, expected to have following signature:
+
+```javascript
+handler(Object payload, Function callback)
+```
+
+- `payload`: chunk of the payload corresponding to the attached hook.
+- `callback`: standard error-back pattern, with updated `payload` as second argument.
+
+List of available hooks could be found [below](#hooks).
+
+### Fbbot#on
+
+Adds event listener for both incoming and outgoing flows. Outgoing events (hooks) prefixed with `send`. Each event listener function will receive `send` method tailored for the event in question.
+
+```javascript
+fbbot.on(String hook, Function listener)
+```
+
+- `hook`: hook handle to attach event listener to.
+- `listener`: event listener, expected to have following signature:
+
+```javascript
+listener(Object payload, Function send)
+```
+
+- `payload`: chunk of the payload corresponding to the attached hook.<sup>1</sup>
+- `send`: function being tailored specifically for the event – baked in user id where it's available,
+and set of convenience methods for sending specific message types, [listed below](#convenience-methods).
+
+<sup>1</sup> Message payload augmented with `type` property and reference `user` object. All payloads have prototype object with reference to the "parent" object.
+
+List of available hooks could be found [below](#hooks).
+
+### Fbbot#send
+
+Sends provided payload to the specified (by either `id` or `phone_number`) user,
+reconstructs platform expected payload based on the message type and minimal data set.
+
+```javascript
+fbbot.send(String|Object user, [String type ,] [Object payload ,] [Function callback]);
+```
+
+- `user`: user id or phone number, provided via string (user id) or object with `id` or `phone_number` properties.
+- `type`: *(optional)* message type, if not provided, will fallback to `Fbbot#MESSAGE` type.
+- `payload`: *(optional)* payload object for the chosen message type, not expected for `MARK_SEEN`, `TYPING_ON` and `TYPING_OFF` types.
+- `callback`: *(optional)* standard error-back pattern, with `response` object as second argument.
+
+List of available message types could be found [below](#message-types).
+
+Also `send` method with backed in user id available as second argument for event listeners.
+
+```javascript
+fbbot.send([String type ,] [Object payload ,] [Function callback]);
+```
+
+Along with convenience methods per supported message type.
+
+```javascript
+fbbot.send.<type>([Object payload ,] [Function callback]);
+```
+
+#### Convenience Methods
+
+- `send.message`: 
+
+### Message Types
+
+- `MESSAGE`: raw message payload.
+
+### Hooks
+
+Same hooks work (applied) for both middleware and event listeners.
+
+#### Incoming
+
+Available incoming hooks (in the following order):
+
+- `payload`: *(default, if no hook specified)* applied to entire payload.
+- `entry`: applied per each entry of the payload.
+- `messaging`: applied per each messaging element of the payload.
+- `delivery`: applied to delivery notifications.
+- `postback`: applied to postback messages.
+- `message`: applied to regular messages.
+  - `message.attachment`: applied to attachment type messages only.
+  - `message.quick_reply`: applied to quick reply type messages only.
+  - `message.sticker`: applied to sticker type messages only.
+  - `message.text`: applied to text type messages only.
+- `quick_reply`: applied to quick reply payload.
+- `attachment`: applied per each attachment.
+  - `attachment.audio`: applied to audio attachments only.
+  - `attachment.fallback`: applied to fallback attachments only.<sup>2</sup>
+  - `attachment.file`: applied to file attachments only.
+  - `attachment.image`: applied to image attachments only.
+  - `attachment.location`: applied to location attachments only.
+
+<sup>2</sup> Some undocumented case when user sends only link without any other text in the message,
+your bot would receive as dual quantum state message, which would have regular text field with the link as text,
+as well as attachment object with type `fallback` with `url` field and prefetched `title` of the linked page.
+Example of such payload could be found in [message-attachment-fallback-text.json](test/fixtures/incoming/message-attachment-fallback-text.json).
+
+Sample payloads could be found in [incoming fixtures](test/fixtures/incoming) folder.
+
+#### Outgoing
+
+- `send`: applied to the entire outgoing payload.
+- `send.message`: applied to all outgoing messages (status updates, like `typing_on` are not messages).
+- `send.attachment`: applied to outgoing attachments.
+  - `send.attachment.audio`: applied to outgoing audio attachments only.
+  - `send.attachment.file`: applied to outgoing file attachments only.
+  - `send.attachment.image`: applied to outgoing image attachments only.
+  - `send.attachment.video`: applied to outgoing video attachments only.
+  - `send.attachment.template`: applied to templated attachments.
+- `send.quick_reply`: applied per each outgoing quick reply element.
+- `send.payload`: applied to payload objects within outgoing message.
+  - `send.payload.generic`: applied to payload objects with generic template.
+  - `send.payload.receipt`: applied to payload objects with receipt template.
+  - `send.payload.button`: applied to payload objects with button template.
+- `send.element`: applied per each element of the outgoing payload.
+- `send.button`: applied per button options within message, either button template or buttons option within other templates.
+  - `send.button.web_url`: applied to buttons with urls only.
+  - `send.button.postback`: applied to postback buttons only.
+  - `send.button.phone_number`: applied to call buttons only.
+  - `send.button.element_share`: applied to share buttons only.<sup>3</sup>
+  - `send.button.payment`: applied to buy buttons only.<sup>4</sup>
+
+<sup>3</sup> The [Share Button](https://developers.facebook.com/docs/messenger-platform/send-api-reference/share-button) only works with the Generic Template.
+
+<sup>4</sup> The [Buy Button](https://developers.facebook.com/docs/messenger-platform/send-api-reference/buy-button) only works with the Generic Template and it must be the first button.
+
 ## TODO
 
+- add `send.batch` method, for sending series of messages, with smart `notification_type`s.
 - support for `read` and `echo` notification
 - add `airline` templates
 - fetch user info middleware

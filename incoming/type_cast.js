@@ -7,6 +7,7 @@ module.exports = typeCast;
 // order here is important, not just alphabetical, although I did try to keep it nice
 // some messages contain `text` and other fields, and shouldn't be treated as separate type
 // examples: attachments#fallback (with url), quick_reply (with payload), sticker_id+attachments#image (sticker)
+// TODO: Clean it up
 var types = [
   // meta
   'delivery',

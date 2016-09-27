@@ -48,6 +48,10 @@
   },
 
   {
+    "count": {
+      "expected": 3,
+      "hook": "send.button"
+    },
     "arguments": {
       "user": {
         "id": "10157033896470956"
@@ -56,9 +60,9 @@
       "data": {
         "text": "What do you want to do next?",
         "buttons": [{
-          "type": "web_url",
-          "url": "https://first.parseapp.com",
-          "title": "Show First Website"
+          "type":"phone_number",
+          "title":"Call Representative",
+          "payload":"+15105551234"
         }, {
           "type": "postback",
           "title": "Second Chatting",
@@ -86,9 +90,9 @@
             "template_type": "button",
             "text": "What do you want to do next?",
             "buttons": [{
-              "type": "web_url",
-              "url": "https://first.parseapp.com",
-              "title": "Show First Website"
+              "type":"phone_number",
+              "title":"Call Representative",
+              "payload":"+15105551234"
             }, {
               "type": "postback",
               "title": "Second Chatting",

@@ -12,6 +12,7 @@
     "preci-test": "is-node-not-modern && npm install hapi@10 || is-node-modern",
     "ci-test": "npm run cover",
     "ci-lint": "is-node-modern && npm run lint || is-node-not-modern",
+    "toc": "toc-md README.md",
     "get-version": "node -e \"console.log(require('./package.json').version)\"",
     "update-readme": "sed -i.bak 's/\\/master\\.svg/\\/v'$(npm --silent run get-version)'.svg/g' README.md",
     "restore-readme": "mv README.md.bak README.md",
@@ -20,7 +21,8 @@
   },
   "pre-commit": [
     "lint",
-    "test"
+    "test",
+    "toc"
   ],
   "repository": {
     "type": "git",
@@ -46,10 +48,10 @@
   "homepage": "https://github.com/alexindigo/fbbot#readme",
   "devDependencies": {
     "coveralls": "^2.11.14",
-    "eslint": "^3.6.0",
+    "eslint": "^3.6.1",
     "express": "^4.14.0",
     "glob": "^7.1.0",
-    "hapi": "^15.0.3",
+    "hapi": "^15.1.0",
     "in-publish": "^2.0.0",
     "is-node-modern": "^1.0.0",
     "istanbul": "^0.4.5",
@@ -57,7 +59,8 @@
     "restify": "^4.1.1",
     "rimraf": "^2.5.4",
     "tap-spec": "^4.1.1",
-    "tape": "^4.6.0"
+    "tape": "^4.6.0",
+    "toc-md": "^0.2.0"
   },
   "dependencies": {
     "agnostic": "^1.2.1",

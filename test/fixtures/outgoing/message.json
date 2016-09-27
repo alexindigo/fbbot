@@ -301,6 +301,10 @@
     "meta": {
       "description": "Sending full message object with quick reply options, with phone number instead of id"
     },
+    "count": {
+      "expected": 2,
+      "hook": "send.quick_reply"
+    },
     "arguments": {
       "user": {
         "phone_number": "12345678901"

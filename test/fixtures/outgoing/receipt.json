@@ -1,5 +1,9 @@
 [
   {
+    "count": {
+      "expected": 2,
+      "hook": "send.element"
+    },
     "arguments": {
       "user": "10157033896471055",
       "type": "RECEIPT",
@@ -115,6 +119,10 @@
   {
     "meta": {
       "description": "It should truncate extra elements"
+    },
+    "count": {
+      "expected": 100,
+      "hook": "send.element"
     },
     "arguments": {
       "user": "10157033896471155",

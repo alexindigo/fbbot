@@ -1,0 +1,168 @@
+[
+  {
+    "count": {
+      "expected": 2,
+      "hook": "send.quick_reply"
+    },
+    "arguments": {
+      "user": "10157033896470341",
+      "type": "QUICK_REPLIES",
+      "data": {
+        "text": "Pick a color:",
+        "quick_replies": [{
+          "content_type": "text",
+          "title": "Red",
+          "payload": "DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+        }, {
+          "content_type": "text",
+          "title": "Green",
+          "payload": "DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
+        }]
+      }
+    },
+
+    "expected": {
+      "recipient": {
+      	"id": "10157033896470341"
+      },
+      "message": {
+        "text": "Pick a color:",
+        "quick_replies": [{
+          "content_type": "text",
+          "title": "Red",
+          "payload": "DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+        }, {
+          "content_type": "text",
+          "title": "Green",
+          "payload": "DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
+        }]
+      }
+    },
+
+    "response": {
+      "recipient_id": "10157033896470341",
+      "message_id": "mid.1456970487939:c34767dfe57ee6e339"
+    }
+  },
+
+  {
+    "meta": {
+      "description": "It should truncate extra options"
+    },
+    "count": {
+      "expected": 10,
+      "hook": "send.quick_reply"
+    },
+    "arguments": {
+      "user": "10157033896470342",
+      "type": "QUICK_REPLIES",
+      "data": {
+        "text": "Pick a number:",
+        "quick_replies": [{
+          "content_type": "text",
+          "title": "#1",
+          "payload": "{one: 1}"
+        }, {
+          "content_type": "text",
+          "title": "#2",
+          "payload": "{two: 2}"
+        }, {
+          "content_type": "text",
+          "title": "#3",
+          "payload": "{three: 3}"
+        }, {
+          "content_type": "text",
+          "title": "#4",
+          "payload": "{four: 4}"
+        }, {
+          "content_type": "text",
+          "title": "#5",
+          "payload": "{five: 5}"
+        }, {
+          "content_type": "text",
+          "title": "#6",
+          "payload": "{six: 6}"
+        }, {
+          "content_type": "text",
+          "title": "#7",
+          "payload": "{seven: 7}"
+        }, {
+          "content_type": "text",
+          "title": "#8",
+          "payload": "{eight: 8}"
+        }, {
+          "content_type": "text",
+          "title": "#9",
+          "payload": "{nine: 9}"
+        }, {
+          "content_type": "text",
+          "title": "#10",
+          "payload": "{ten: 10}"
+        }, {
+          "content_type": "text",
+          "title": "#11",
+          "payload": "{eleven: 11}"
+        }, {
+          "content_type": "text",
+          "title": "#12",
+          "payload": "{twelve: 12}"
+        }]
+      }
+    },
+
+    "expected": {
+      "recipient": {
+      	"id": "10157033896470342"
+      },
+      "message": {
+        "text": "Pick a number:",
+        "quick_replies": [{
+          "content_type": "text",
+          "title": "#1",
+          "payload": "{one: 1}"
+        }, {
+          "content_type": "text",
+          "title": "#2",
+          "payload": "{two: 2}"
+        }, {
+          "content_type": "text",
+          "title": "#3",
+          "payload": "{three: 3}"
+        }, {
+          "content_type": "text",
+          "title": "#4",
+          "payload": "{four: 4}"
+        }, {
+          "content_type": "text",
+          "title": "#5",
+          "payload": "{five: 5}"
+        }, {
+          "content_type": "text",
+          "title": "#6",
+          "payload": "{six: 6}"
+        }, {
+          "content_type": "text",
+          "title": "#7",
+          "payload": "{seven: 7}"
+        }, {
+          "content_type": "text",
+          "title": "#8",
+          "payload": "{eight: 8}"
+        }, {
+          "content_type": "text",
+          "title": "#9",
+          "payload": "{nine: 9}"
+        }, {
+          "content_type": "text",
+          "title": "#10",
+          "payload": "{ten: 10}"
+        }]
+      }
+    },
+
+    "response": {
+      "recipient_id": "10157033896470342",
+      "message_id": "mid.1456970487939:c34767dfe57ee6e340"
+    }
+  }
+]

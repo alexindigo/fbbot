@@ -26,7 +26,7 @@ common.iterateSendings(function(sending, handle, callback)
   {
     // three checks for erroneous requests, and six checks for successful requests
     // with addition or expected extra tests
-    t.plan((sending.error ? 3 : 6) + (sending.expectedTests || 0));
+    t.plan((sending.error ? 3 : 6) + (sending.expectedTests || 0) + (sending.count ? sending.count.expected : 0));
 
     // Id takes over phone_humber
     var expectedPhone = sending.arguments.user['phone_number']
@@ -68,6 +68,15 @@ common.iterateSendings(function(sending, handle, callback)
       if (sending.arguments.data)
       {
         args.push(sending.arguments.data);
+      }
+
+      // count events
+      if (sending.count)
+      {
+        fbbot.on(sending.count.hook, function(payload)
+        {
+          t.equal(typeof payload, 'object', 'expect event ' + sending.count.hook + ' payload to be object');
+        });
       }
 
       // check events
