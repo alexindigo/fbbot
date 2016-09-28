@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint *.js */*.js",
-    "pretest": "is-node-not-modern && npm install hapi@10 || is-node-modern",
+    "pretest": "is-node-not-modern && npm install hapi@9 || is-node-modern",
     "test": "tape test/test-*.js | tap-spec",
     "precover": "rimraf coverage",
     "cover": "istanbul cover tape -- test/test-*.js | tap-spec",
-    "preci-test": "is-node-not-modern && npm install hapi@10 || is-node-modern",
+    "preci-test": "is-node-not-modern && npm install hapi@9 || is-node-modern",
     "ci-test": "npm run cover",
     "ci-lint": "is-node-modern && npm run lint || is-node-not-modern",
     "toc": "toc-md README.md",
