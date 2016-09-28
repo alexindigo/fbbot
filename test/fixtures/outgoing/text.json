@@ -19,5 +19,30 @@
       "recipient_id": "10157033896470555",
       "message_id": "mid.1456970487948:c34767dfe57ee6e339"
     }
+  },
+
+  {
+    "meta": {
+      "description": "Truncates extra characters from the provided string"
+    },
+    "arguments": {
+      "user": "10157033896470556",
+      "type": "TEXT",
+      "data": "In 1988, Joseph D. Becker published the first Unicode draft proposal. At the basis of his design was the naive assumption that 16 bits per character would suffice. In 1991, the first version of the Unicode standard was published, with code points limited to 16 bits. In the following years many systems have added support for Unicode and switched to the UCS-2 encoding. It was especially attractive for new technologies, such as the Qt framework (1992), Windows NT 3.1 (1993) and Java (1995)."
+    },
+
+    "expected": {
+      "recipient": {
+        "id": "10157033896470556"
+      },
+      "message": {
+        "text": "In 1988, Joseph D. Becker published the first Unicode draft proposal. At the basis of his design was the naive assumption that 16 bits per character would suffice. In 1991, the first version of the Unicode standard was published, with code points limited to 16 bits. In the following years many systems have added suppor"
+      }
+    },
+
+    "response": {
+      "recipient_id": "10157033896470556",
+      "message_id": "mid.1456970487948:c44767dfe57ee6e339"
+    }
   }
 ]

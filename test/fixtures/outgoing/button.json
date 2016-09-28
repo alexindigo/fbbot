@@ -12,7 +12,10 @@
         }, {
           "type": "postback",
           "title": "Start Chatting",
-          "payload": "USER_DEFINED_PAYLOAD"
+          "payload": {
+            "custom": "payload",
+            "provides_as": "object"
+          }
         }]
       }
     },
@@ -34,7 +37,7 @@
             }, {
               "type": "postback",
               "title": "Start Chatting",
-              "payload": "USER_DEFINED_PAYLOAD"
+              "payload": "{\"custom\":\"payload\",\"provides_as\":\"object\"}"
             }]
           }
         }

@@ -6,7 +6,7 @@ module.exports = postback;
  *
  * @this  Fbbot#
  * @param {object} payload - messaging envelop object
- * @param {function} callback - invoked after type casting is done
+ * @param {function} callback - invoked after parsing is done
  */
 function postback(payload, callback)
 {

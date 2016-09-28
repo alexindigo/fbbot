@@ -319,7 +319,9 @@
         }, {
           "content_type": "text",
           "title": "Green",
-          "payload": "DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
+          "payload": {
+            "developer": ["defined", "payload", "for", "picking", "green"]
+          }
         }]
       }
     },
@@ -337,7 +339,7 @@
         }, {
           "content_type": "text",
           "title": "Green",
-          "payload": "DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
+          "payload": "{\"developer\":[\"defined\",\"payload\",\"for\",\"picking\",\"green\"]}"
         }]
       }
     },

@@ -35,12 +35,38 @@ npm install --save fbbot
   - [Fbbot#use](#fbbotuse)
   - [Fbbot#on](#fbboton)
   - [Fbbot#send](#fbbotsend)
-    - [Convenience Methods](#convenience-methods)
+  - [Convenience Methods](#convenience-methods)
+    - [`send.message`](#sendmessage)
+    - [`send.markSeen`](#sendmarkseen)
+    - [`send.typingOn`](#sendtypingon)
+    - [`send.typingOff`](#sendtypingoff)
+    - [`send.text`](#sendtext)
+    - [`send.image`](#sendimage)
+    - [`send.audio`](#sendaudio)
+    - [`send.video`](#sendvideo)
+    - [`send.file`](#sendfile)
+    - [`send.generic`](#sendgeneric)
+    - [`send.button`](#sendbutton)
+    - [`send.receipt`](#sendreceipt)
+    - [`send.quickReplies`](#sendquickreplies)
   - [Message Types](#message-types)
+    - [`MESSAGE`](#message)
+    - [`MARK_SEEN`](#mark_seen)
+    - [`TYPING_ON`](#typing_on)
+    - [`TYPING_OFF`](#typing_off)
+    - [`TEXT`](#text)
+    - [`IMAGE`](#image)
+    - [`AUDIO`](#audio)
+    - [`VIDEO`](#video)
+    - [`FILE`](#file)
+    - [`GENERIC`](#generic)
+    - [`BUTTON`](#button)
+    - [`RECEIPT`](#receipt)
+    - [`QUICK_REPLIES`](#quick_replies)
   - [Hooks](#hooks)
     - [Incoming](#incoming)
     - [Outgoing](#outgoing)
-- [TODO](#todo)
+- [Roadmap](#roadmap)
 - [License](#license)
 
 <!-- TOC END -->
@@ -236,8 +262,10 @@ List of available hooks could be found [below](#hooks).
 Sends provided payload to the specified (by either `id` or `phone_number`) user,
 reconstructs platform expected payload based on the message type and minimal data set.
 
+Will automatically stringify payload object for _postback_ buttons, since Messenger Platform expects it to be a string.
+
 ```javascript
-fbbot.send(String|Object user, [String type ,] [Object payload ,] [Function callback]);
+fbbot.send(String|Object user, [String type ,] [String|Array|Object payload ,] [Function callback]);
 ```
 
 - `user`: user id or phone number, provided via string (user id) or object with `id` or `phone_number` properties.
@@ -247,25 +275,353 @@ fbbot.send(String|Object user, [String type ,] [Object payload ,] [Function call
 
 List of available message types could be found [below](#message-types).
 
-Also `send` method with backed in user id available as second argument for event listeners.
+Also `send` method with backed in user id available as second argument for event listeners:
 
 ```javascript
-fbbot.send([String type ,] [Object payload ,] [Function callback]);
+send([String type ,] [String|Array|Object payload ,] [Function callback]);
 ```
 
-Along with convenience methods per supported message type.
+Along with convenience methods per supported message type:
 
 ```javascript
-fbbot.send.<type>([Object payload ,] [Function callback]);
+send.<type>([Object payload ,] [Function callback]);
 ```
 
-#### Convenience Methods
+### Convenience Methods
 
-- `send.message`: 
+#### `send.message`
+
+Sends payload as raw message.
+
+```javascript
+send.message(Object payload [, Function callback])
+```
+
+Example payload could be found [below](#message).
+
+#### `send.markSeen`
+
+Marks last message as read.
+
+```javascript
+send.markSeen([Function callback])
+```
+
+#### `send.typingOn`
+
+Turns typing indicators on.
+
+```javascript
+send.typingOn([Function callback])
+```
+
+#### `send.typingOff`
+
+Turns typing indicators off.
+
+```javascript
+send.typingOff([Function callback])
+```
+
+#### `send.text`
+
+Sends text message. Expects text string as payload. Will truncate provided string to 320 characters, as per Messenger Platform limitations.
+
+```javascript
+send.text(String text [, Function callback])
+```
+
+#### `send.image`
+
+Sends image attachment. Expects string with image url as payload.
+
+```javascript
+send.image(String url [, Function callback])
+```
+
+#### `send.audio`
+
+Sends audio attachment. Expects string with url to audio file as payload.
+
+```javascript
+send.audio(String url [, Function callback])
+```
+
+#### `send.video`
+
+Sends video attachment. Expects string with url to video file as payload.
+
+```javascript
+send.video(String url [, Function callback])
+```
+
+#### `send.file`
+
+Sends generic file attachment. Expects string with url to a file as payload.
+
+```javascript
+send.file(String url [, Function callback])
+```
+
+#### `send.generic`
+
+Sends generic template attachment. Expects array of "card" objects as payload. Will send first 10 elements, as per Messenger Platform limitations.
+
+```javascript
+send.generic(Array elements [, Function callback])
+```
+
+Example payload could be found [below](#generic).
+
+#### `send.button`
+
+Sends button template attachment. Expects object with text and array of buttons as payload. Will send first 3 buttons, as per Messenger Platform limitations.
+
+```javascript
+send.button(Object payload [, Function callback])
+```
+
+Example payload could be found [below](#button).
+
+#### `send.receipt`
+
+Sends receipt template attachment. Expects receipt object as payload. Will send first 100 item elements, as per Messenger Platform limitations.
+
+```javascript
+send.receipt(Object payload [, Function callback])
+```
+
+Example payload could be found [below](#receipt).
+
+#### `send.quickReplies`
+
+Sends quick replies object. Expects object with text and array of quick_reply buttons as payload. Will send first 10 buttons, as per Messenger Platform limitations. Will automatically stringify payload property.
+
+```javascript
+send.quickReplies(Object payload [, Function callback])
+```
+
+Example payload could be found [below](#quick_replies).
 
 ### Message Types
 
-- `MESSAGE`: raw message payload.
+Available as properties of the Fbbot instance, like `fbbot.MESSAGE` and `fbbot.MARK_SEEN`.
+
+#### `MESSAGE`
+
+Treats payload as raw message.
+
+Example payload:
+
+```json
+{
+  "attachment": {
+    "type": "template",
+    "payload": {
+      "template_type": "generic",
+      "elements": [{
+        "title": "Welcome to Peter's Hats",
+        "item_url": "https://petersfancybrownhats.com",
+        "image_url": "https://petersfancybrownhats.com/company_image.png",
+        "subtitle": "We've got the right hat for everyone.",
+        "buttons": [{
+          "type": "web_url",
+          "url": "https://petersfancybrownhats.com",
+          "title": "View Website"
+        }, {
+          "type": "postback",
+          "title": "Start Chatting",
+          "payload": {
+            "developer": ["defined", "payload"],
+          }
+        }]
+      }]
+    }
+  }
+}
+```
+
+#### `MARK_SEEN`
+
+Doesn't require payload, corresponds to `mark_seen` sender action.
+
+#### `TYPING_ON`
+
+Doesn't require payload, corresponds to `typing_on` sender action.
+
+#### `TYPING_OFF`
+
+Doesn't require payload, corresponds to `typing_off` sender action.
+
+#### `TEXT`
+
+Treats payload as text message. Expects text string as payload. Will truncate provided string to 320 characters, as per Messenger Platform limitations.
+
+#### `IMAGE`
+
+Treats payload as image attachment. Expects string with image url as payload.
+
+#### `AUDIO`
+
+Treats payload as audio attachment. Expects string with url to audio file as payload.
+
+#### `VIDEO`
+
+Treats payload as video attachment. Expects string with url to video file as payload.
+
+#### `FILE`
+
+Treats payload as generic file attachment. Expects string with url to a file as payload.
+
+#### `GENERIC`
+
+Treats payload as generic template attachment. Expects array of "card" objects as payload. Will send first 10 elements, as per Messenger Platform limitations.
+
+Example payload:
+
+```json
+[
+  {
+    "title": "Welcome to Peter's Hats",
+    "item_url": "https://petersfancybrownhats.com",
+    "image_url": "https://petersfancybrownhats.com/company_image.png",
+    "subtitle": "We've got the right hat for everyone.",
+    "buttons": [{
+      "type": "web_url",
+      "url": "https://petersfancybrownhats.com",
+      "title": "View Website"
+    }, {
+      "type": "postback",
+      "title": "Start Chatting",
+      "payload": "DEVELOPER_DEFINED_PAYLOAD"
+    }]
+  },
+
+  {
+    "title": "Welcome to Peter's Boots",
+    "item_url": "https://petersokredboots.com",
+    "image_url": "https://petersokredboots.com/company_image.png",
+    "subtitle": "We've got the left boots for everyone.",
+    "buttons": [{
+      "type": "web_url",
+      "url": "https://petersokredboots.com",
+      "title": "View Website"
+    }, {
+      "type": "postback",
+      "title": "Start Chatting",
+      "payload": {
+        "developer": ["defined", "payload"],
+      }
+    }]
+  }
+]
+```
+
+#### `BUTTON`
+
+Treats payload as button template attachment. Expects object with text and array of buttons as payload. Will send first 3 buttons, as per Messenger Platform limitations.
+
+Example payload:
+
+```json
+{
+  "text": "What do you want to do next?",
+  "buttons":
+  [
+    {
+      "type": "web_url",
+      "url": "https://petersapparel.parseapp.com",
+      "title": "Show Website"
+    },
+    {
+      "type": "postback",
+      "title": "Start Chatting",
+      "payload": {
+        "developer": ["defined", "payload"],
+      }
+    }
+  ]
+}
+```
+
+#### `RECEIPT`
+
+Treats payload as receipt template attachment. Expects receipt object as payload. Will send first 100 item elements, as per Messenger Platform limitations.
+
+Example payload:
+
+```json
+{
+  "recipient_name": "Stephane Crozatier",
+  "order_number": "12345678902",
+  "currency": "USD",
+  "payment_method": "Visa 2345",
+  "order_url": "http://petersapparel.parseapp.com/order?order_id=123456",
+  "timestamp": "1428444852",
+  "elements": [{
+    "title": "Classic White T-Shirt",
+    "subtitle": "100% Soft and Luxurious Cotton",
+    "quantity": 2,
+    "price": 50,
+    "currency": "USD",
+    "image_url": "http://petersapparel.parseapp.com/img/whiteshirt.png"
+  }, {
+    "title": "Classic Gray T-Shirt",
+    "subtitle": "100% Soft and Luxurious Cotton",
+    "quantity": 1,
+    "price": 25,
+    "currency": "USD",
+    "image_url": "http://petersapparel.parseapp.com/img/grayshirt.png"
+  }],
+  "address": {
+    "street_1": "1 Hacker Way",
+    "street_2": "",
+    "city": "Menlo Park",
+    "postal_code": "94025",
+    "state": "CA",
+    "country": "US"
+  },
+  "summary": {
+    "subtotal": 75.00,
+    "shipping_cost": 4.95,
+    "total_tax": 6.19,
+    "total_cost": 56.14
+  },
+  "adjustments": [{
+    "name": "New Customer Discount",
+    "amount": 20
+  }, {
+    "name": "$10 Off Coupon",
+    "amount": 10
+  }]
+}
+```
+
+#### `QUICK_REPLIES`
+
+Treats payload as quick replies object. Expects object with text and array of quick_reply buttons as payload. Will send first 10 buttons, as per Messenger Platform limitations. Will automatically stringify payload property.
+
+Example payload:
+
+```json
+{
+  "text": "Pick a color:",
+  "quick_replies": [{
+    "content_type": "text",
+    "title": "Red",
+    "payload": "DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+  }, {
+    "content_type": "text",
+    "title": "Green",
+    "payload": {
+      "custom": "payload",
+      "for": "quick_reply"
+    }
+  }, {
+    "content_type": "location"
+  }]
+}
+```
 
 ### Hooks
 
@@ -327,7 +683,7 @@ Sample payloads could be found in [incoming fixtures](test/fixtures/incoming) fo
 
 <sup>4</sup> The [Buy Button](https://developers.facebook.com/docs/messenger-platform/send-api-reference/buy-button) only works with the Generic Template and it must be the first button.
 
-## TODO
+## Roadmap
 
 - add `send.batch` method, for sending series of messages, with smart `notification_type`s.
 - support for `read` and `echo` notification
