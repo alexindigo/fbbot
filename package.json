@@ -63,7 +63,7 @@
     "toc-md": "^0.2.0"
   },
   "dependencies": {
-    "agnostic": "^1.2.1",
+    "agnostic": "^1.2.2",
     "array-find": "^1.0.0",
     "async-cache": "^1.1.0",
     "asynckit": "^0.4.0",
