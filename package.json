@@ -51,7 +51,7 @@
     "eslint": "^3.6.1",
     "express": "^4.14.0",
     "glob": "^7.1.0",
-    "hapi": "^15.1.0",
+    "hapi": "^16.0.3",
     "in-publish": "^2.0.0",
     "is-node-modern": "^1.0.0",
     "istanbul": "^0.4.5",
