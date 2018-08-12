@@ -1,4 +1,5 @@
 # fbbot [![NPM Module](https://img.shields.io/npm/v/fbbot.svg?style=flat)](https://www.npmjs.com/package/fbbot)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Falexindigo%2Ffbbot.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Falexindigo%2Ffbbot?ref=badge_shield)
 
 Minimal framework/SDK for facebook messenger bots. BYOS (Bring Your Own Server).
 
@@ -694,3 +695,6 @@ Sample payloads could be found in [incoming fixtures](test/fixtures/incoming) fo
 ## License
 
 FBBot is released under the [MIT](LICENSE) license.
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Falexindigo%2Ffbbot.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Falexindigo%2Ffbbot?ref=badge_large)
